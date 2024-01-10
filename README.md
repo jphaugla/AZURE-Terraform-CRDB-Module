@@ -77,3 +77,22 @@ https://learn.microsoft.com/en-us/azure/virtual-machines/sizes
 User Data that is a static SH 
 https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/master/linux-vm-main.tf
 
+### Adding Kafka
+Node internal and external addresses for haproxy, the app node, and kafka dumped as appropriately named text files in the directory [provisioners/temp](provisioners/temp)
+### kafka node
+Check out the kafka control panel by substituting the localhost with the ip found in [kafka_external_ip.txt](provisioners/temp/kafka_external_ip.txt) at http://localhost:9021
+
+## Tech notes
+* terraform.tfvars has the important parameters.  
+* A template file at templates/inventory.tpl maps connects terraform to ansible along with provisioning.tf
+* Ansible is all in the provisioners directory using the playbook.yml file
+* Each of the node groups (haproxy-node, app-node, kafka-node) have a separate role under the provisioners/roles directory 
+* Under each of these roles, a vars/main.yml file has variable flags to enable/disable processing
+  * To eliminate all process on one of these node groups, best to set the node count to zero in terraform.tfvars
+* Under each of these roles  a tasks/main.yml calls the required tasks to do the actual processing
+
+To tear it all down:
+NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command will eventually be successful
+```bash
+terraform destroy
+```
