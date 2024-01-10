@@ -81,6 +81,34 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
 Node internal and external addresses for haproxy, the app node, and kafka dumped as appropriately named text files in the directory [provisioners/temp](provisioners/temp)
 ### kafka node
 Check out the kafka control panel by substituting the localhost with the ip found in [kafka_external_ip.txt](provisioners/temp/kafka_external_ip.txt) at http://localhost:9021
+### Verify the data is correct
+* login to the admin node using the IP address at [app_external_ip](provisioners/temp/app_external_ip.txt) instead of localhost
+* use the defined function to connect to the admin user
+* verify table exists
+* verify data is flowing in
+```bash
+ssh -i localPemFile adminuser@localhost
+CRDB
+jhaugland@192.168.3.103:26257/defaultdb> \dt
+List of relations:
+  Schema |     Name     | Type  |   Owner
+---------+--------------+-------+------------
+  public | transactions | table | jhaugland
+(1 row)
+jhaugland@192.168.3.103:26257/defaultdb> select * from transactions limit 10;
+  transaction_id | card_id | user_id | purchase_id | store_id
+-----------------+---------+---------+-------------+-----------
+               1 |      23 | User_3  |           0 |        3
+               2 |      15 | User_8  |           1 |        5
+               3 |      21 | User_6  |           2 |        1
+               4 |      16 | User_5  |           3 |        5
+               5 |      17 | User_6  |           4 |        3
+               6 |      21 | User_8  |           5 |        5
+               7 |       3 | User_   |           6 |        1
+               8 |      17 | User_9  |           7 |        6
+               9 |       5 | User_   |           8 |        3
+              10 |      13 | User_   |           9 |        5
+```
 
 ## Tech notes
 * terraform.tfvars has the important parameters.  
