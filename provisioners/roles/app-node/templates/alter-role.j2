@@ -1,0 +1,1 @@
+cockroach-sql sql --url "postgresql://{{db_admin_user}}@{{lookup('file', './temp/haproxy_internal_ip.txt')}}:26257/defaultdb?sslmode=verify-full&sslrootcert=$HOME/certs/ca.crt&sslcert=$HOME/certs/client.jhaugland.crt&sslkey=$HOME/certs/client.jhaugland.key" --execute "alter role jhaugland login password 'jasonrocks'"
