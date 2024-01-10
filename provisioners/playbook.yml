@@ -4,6 +4,9 @@
     - haproxy-node
 - hosts: app_node_ips
   gather_facts: True
+  become: yes
+  become_user: adminuser
+  become_method: sudo
   roles:
     - app-node
 - hosts: kafka_node_ips
