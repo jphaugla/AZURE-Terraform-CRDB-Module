@@ -61,6 +61,10 @@
       description = "The name of the resource group containing the existing Microsoft Azure SSH Key"
       type        = string
     }
+    variable "ssh_private_key" {
+      description = "The full path of the private key"
+      type        = string
+    }
 
 # ----------------------------------------
 # Resource Group
@@ -160,6 +164,11 @@
       type        = string
       default     = ""
     }
+    variable "admin_user_password"{
+      description = "password for the admin user"
+      type        = string
+      default     = ""
+    }
 
 # ----------------------------------------
 # CRDB Specifications
@@ -236,6 +245,25 @@
 
     variable "haproxy_vm_size" {
       description = "The Azure instance type for the crdb instances HA Proxy Instance"
+      type        = string
+      default     = "t3a.small"
+    }
+
+# ----------------------------------------
+# Kafka Instance Specifications
+# ----------------------------------------
+    variable "include_kafka" {
+      description = "'yes' or 'no' to include a Kafka instance"
+      type        = string
+      default     = "yes"
+      validation {
+        condition = contains(["yes", "no"], var.include_kafka)
+        error_message = "Valid value for variable 'include_kafka' is : 'yes' or 'no'"        
+      }
+    }
+
+    variable "kafka_vm_size" {
+      description = "The Azure instance type for the crdb instances Kafka"
       type        = string
       default     = "t3a.small"
     }
@@ -338,3 +366,34 @@
       type        = string
       default     = ""
     }
+
+    variable "instances_inventory_file" {
+        description = "Path and file name to send inventory details for ansible later."
+        default = "inventory"
+    }
+
+    variable "ansible_verbosity_switch" {
+        description = "Set the about of verbosity to pass through to the ansible playbook command. No additional verbosity by default. Example: -v or -vv or -vvv."
+        default = ""
+    }
+
+# NOTE that you can't change this without changing parts of the provisioning scripts.
+variable "test-publisher" {
+  description = "The owner of the image"
+  default     = "RedHat"
+}
+
+variable "test-offer" {
+  description = "The type of the image"
+  default     = "RHEL"
+}
+
+variable "test-sku" {
+  description = "The SKU of the image"
+  default     = "8-lvm-gen2"
+}
+
+variable "test-version" {
+  description = "The version of the image"
+  default     = "latest"
+}

@@ -1,0 +1,55 @@
+- name: connect property file
+  template:
+    src: connect-distributed.j2
+    dest: /etc/kafka/connect-distributed.properties
+    owner: root
+    group: root
+    mode: 0644
+
+- name: control center property file
+  template:
+    src: control-center-production.j2
+    dest: /etc/confluent-control-center/control-center-production.properties
+    owner: root
+    group: root
+    mode: 0644
+
+- name: kafka rest property file
+  template:
+    src: kafka-rest.j2
+    dest: /etc/kafka-rest/kafka-rest.properties
+    owner: root
+    group: root
+    mode: 0644
+
+- name: ksql property file
+  template:
+    src: ksql-server.j2
+    dest: /etc/ksqldb/ksql-server.properties
+    owner: root
+    group: root
+    mode: 0644
+
+- name: schema registry property file
+  template:
+    src: schema-registry.j2
+    dest: /etc/schema-registry/schema-registry.properties
+    owner: root
+    group: root
+    mode: 0644
+
+- name: kafka server property file
+  template:
+    src: server.j2
+    dest: /etc/kafka/server.properties
+    owner: root
+    group: root
+    mode: 0644
+
+- name: zookeeper property file
+  template:
+    src: zookeeper.j2
+    dest: /etc/kafka/zookeeper.properties
+    owner: root
+    group: root
+    mode: 0644

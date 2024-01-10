@@ -1,0 +1,20 @@
+- name: install connect datagen plugin
+  become: yes
+  shell:
+    cmd:  confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.2
+
+- name: install postgres kafka connect for postres
+  become: yes
+  shell:
+    cmd:  confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
+ 
+- name: install postgres kafka connect for postres
+  become: yes
+  shell:
+    cmd:  rm -rf /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib/postgresql*
+
+- name: get new postgres jdbc drive
+  become: yes
+  get_url:
+    url: https://jdbc.postgresql.org/download/postgresql-42.7.1.jar 
+    dest: /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib

@@ -1,1 +1,6 @@
 **/keys.sh
+.DS_Store
+.terraform/
+terraform.tfstate*
+.terraform*
+provisioners/temp

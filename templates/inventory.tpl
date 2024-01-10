@@ -1,0 +1,9 @@
+[kafka_node_ips]
+${kafka_public_ip}
+[haproxy_node_ips]
+${haproxy_public_ip}
+[app_node_ips]
+${app_public_ip}
+[all:vars]
+ansible_connection=ssh
+ansible_user=${ssh_user}

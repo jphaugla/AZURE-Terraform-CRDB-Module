@@ -1,0 +1,36 @@
+- name: Creating datagen connector
+  uri:
+    url: "{{connect_endpoint}}/connectors"
+    method: POST
+    return_content: yes
+    validate_certs: no
+    follow_redirects: all
+    body: "{{ lookup('template','datagen-transactions-body.j2') }}"
+    body_format: json
+    headers:
+        Content-Type: "application/json"
+  ignore_errors: true
+
+- name: delete cockroach sink connector
+  uri:
+    url: "{{connect_endpoint}}/connectors/cockroach-sink-json"
+    method: DELETE
+    return_content: yes
+    validate_certs: no
+    follow_redirects: all
+    headers:
+        Content-Type: "application/json"
+  ignore_errors: true
+
+- name: Creating cockroach sink connector
+  uri:
+    url: "{{connect_endpoint}}/connectors"
+    method: POST
+    return_content: yes
+    validate_certs: no
+    follow_redirects: all
+    body: "{{ lookup('template','cockroach-sink-json.j2') }}"
+    body_format: json
+    headers:
+        Content-Type: "application/json"
+  ignore_errors: true

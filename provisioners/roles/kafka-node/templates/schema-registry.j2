@@ -1,0 +1,6 @@
+listeners=http://{{lookup('file', './temp/kafka_internal_ip.txt')}}:8081
+kafkastore.bootstrap.servers=PLAINTEXT://{{lookup('file', './temp/kafka_internal_ip.txt')}}:9092
+kafkastore.topic=_schemas
+debug=false
+metadata.encoder.secret=REPLACE_ME_WITH_HIGH_ENTROPY_STRING
+resource.extension.class=io.confluent.dekregistry.DekRegistryResourceExtension

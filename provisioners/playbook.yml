@@ -1,0 +1,51 @@
+- hosts: haproxy_node_ips
+  gather_facts: True
+  roles:
+    - haproxy-node
+- hosts: app_node_ips
+  gather_facts: True
+  roles:
+    - app-node
+- hosts: kafka_node_ips
+  gather_facts: True
+  become: yes
+  become_user: root
+  become_method: sudo
+  pre_tasks:
+  - name: Update Apt Cache
+    apt: update_cache=yes
+    when: ansible_os_family == "Debian"
+  - name: Ubuntu Packages
+    package:
+      pkg:
+        - build-essential
+        - autoconf
+        - automake
+        - default-jre
+        - libbsd-dev
+        - libltdl-dev
+        - libltdl7
+        - libtool
+        - libpcre3-dev
+        - libevent-dev
+        - pkg-config
+        - zlib1g-dev
+        - libssl-dev
+        - nginx
+        - unzip
+  - name: Set to Realistic Hostname
+    hostname:
+      name: "kafka"
+  - name: Setup Hostsfile
+    lineinfile:
+      dest: /etc/hosts
+      regexp: '^127\.0\.0\.1[ \t]+localhost'
+      line: "127.0.0.1 localhost kafka"
+      state: present
+  handlers:
+  - name: restart_nginx
+    service:
+      name: nginx
+      state: restarted
+  roles:
+    - kafka-node

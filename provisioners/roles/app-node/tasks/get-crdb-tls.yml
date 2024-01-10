@@ -1,0 +1,19 @@
+# save tls keys from app node to local machine
+
+- name: save ca.crt  locally
+  fetch:
+    dest: temp/ca.crt
+    src: /home/adminuser/certs/ca.crt
+    flat: yes
+
+- name: save client.jhaugland.crt locally
+  fetch:
+    dest: temp/client.jhaugland.crt
+    src: /home/adminuser/certs/client.jhaugland.crt
+    flat: yes
+
+- name: save client.jhaugland.key locally
+  fetch:
+    dest: temp/client.jhaugland.key
+    src: /home/adminuser/certs/client.jhaugland.key
+    flat: yes
