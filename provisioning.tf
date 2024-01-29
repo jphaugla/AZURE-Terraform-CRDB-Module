@@ -11,6 +11,6 @@ resource "null_resource" "provision" {
     }
 
     depends_on = [
-azurerm_public_ip.crdb-ip,local_file.instances_file,azurerm_network_interface.crdb_network_interface,azurerm_linux_virtual_machine.haproxy,azurerm_linux_virtual_machine.app,azurerm_linux_virtual_machine.kafka
+azurerm_public_ip.crdb-ip,local_file.instances_file,azurerm_network_interface.crdb_network_interface,azurerm_linux_virtual_machine.haproxy,azurerm_linux_virtual_machine.app,azurerm_linux_virtual_machine.kafka,azurerm_linux_virtual_machine.crdb-instance
     ]
 }

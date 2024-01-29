@@ -32,3 +32,5 @@
 
 - name: add password to admin role
   include_tasks: add-password.yml
+  when:
+    - add_password|bool
