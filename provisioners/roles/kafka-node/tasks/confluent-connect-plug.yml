@@ -3,17 +3,17 @@
   shell:
     cmd:  confluent-hub install --no-prompt confluentinc/kafka-connect-datagen:0.6.2
 
-- name: install postgres kafka connect for postres
+- name: install postgres kafka connect for postgres
   become: yes
   shell:
     cmd:  confluent-hub install --no-prompt confluentinc/kafka-connect-jdbc:latest
  
-- name: install postgres kafka connect for postres
+- name: remove existing postgres jdbc driver
   become: yes
   shell:
     cmd:  rm -rf /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib/postgresql*
 
-- name: get new postgres jdbc drive
+- name: get new postgres jdbc driver
   become: yes
   get_url:
     url: https://jdbc.postgresql.org/download/postgresql-42.7.1.jar 

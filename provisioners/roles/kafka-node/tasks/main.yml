@@ -30,6 +30,11 @@
   when:
     - get_tls|bool
 
+- name: install cockroach sql 
+  include_tasks: install-cockroach-sql.yml
+  when:
+    - install_cockroach_sql|bool
+
 - name: confluent install
   include_tasks: confluent-install.yml
   when:
@@ -50,13 +55,18 @@
   when:
     - start_confluent|bool
 
-- name: wait until connect is acive
+- name: wait until connect is active
   become: yes
   command: curl -X GET "{{connect_endpoint}}"
   retries: 20
   delay: 10
   register: result
   until: result.rc == 0
+
+- name: add password to cockroach admin role
+  include_tasks: add-password.yml
+  when:
+    - add_password|bool
 
 - name: add confluent connectors
   include_tasks: confluent-add-connectors.yml
