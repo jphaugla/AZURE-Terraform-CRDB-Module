@@ -2,6 +2,10 @@
   gather_facts: True
   roles:
     - haproxy-node
+- hosts: crdb_node_ips
+  gather_facts: True
+  roles:
+    - crdb-node
 - hosts: app_node_ips
   gather_facts: True
   roles:

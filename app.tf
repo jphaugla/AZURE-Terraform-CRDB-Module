@@ -29,7 +29,7 @@ resource "azurerm_linux_virtual_machine" "app" {
     name                  = "${var.owner}-${var.resource_name}-vm-app"
     location              = var.virtual_network_location
     resource_group_name   = local.resource_group_name
-    size                  = var.haproxy_vm_size
+    size                  = var.app_vm_size
     tags                  = local.tags
 
     network_interface_ids = [azurerm_network_interface.app[0].id]

@@ -32,7 +32,7 @@ virtual_network_location   = "eastus2"
 # ----------------------------------------
 # CRDB Instance Specifications
 # ----------------------------------------
-crdb_vm_size               = "Standard_B1ms"
+crdb_vm_size               = "Standard_B2ms"
 crdb_disk_size             = 128
 crdb_resize_homelv         = "yes"
 crdb_nodes                 = 3
@@ -47,7 +47,7 @@ admin_user_password        = "jasonrocks"
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-crdb_version               = "23.1.13"
+crdb_version               = "23.1.14"
 
 # ----------------------------------------
 # Cluster Enterprise License Keys

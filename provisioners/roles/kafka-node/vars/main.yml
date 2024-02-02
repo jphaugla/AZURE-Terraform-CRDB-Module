@@ -1,3 +1,4 @@
+save_ips: true
 confluent_version: '7.5.1'
 confluent_folder: '7.5'
 installation_dir : /opt

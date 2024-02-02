@@ -1,6 +1,6 @@
 resource "local_file" "instances_file" {
-    filename = "provisioners/${var.instances_inventory_file}"
-    content = templatefile("templates/inventory.tpl",
+    filename = "../provisioners/${var.instances_inventory_file}"
+    content = templatefile("../templates/inventory.tpl",
         {
             crdb_public_names = "${join("\n", (azurerm_public_ip.crdb-ip.*.name) )}"
             crdb_public_ips = "${join("\n", (azurerm_public_ip.crdb-ip.*.ip_address) )}"

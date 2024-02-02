@@ -1,5 +1,7 @@
 [kafka_node_ips]
 ${kafka_public_ip}
+[crdb_node_ips]
+${crdb_public_ips}
 [haproxy_node_ips]
 ${haproxy_public_ip}
 [app_node_ips]

@@ -8,21 +8,21 @@
   
 - name: save ca.crt  remotely
   copy:
-    src: temp/ca.crt
+    src: "temp/{{ region }}/ca.crt"
     dest: /home/adminuser/certs/ca.crt
     remote_src: false
     owner: adminuser
 
 - name: save client.jhaugland.crt remotely
   copy:
-    src: temp/client.jhaugland.crt
+    src: "temp/{{ region }}/client.jhaugland.crt"
     dest: /home/adminuser/certs/client.jhaugland.crt
     remote_src: false
     owner: adminuser
 
 - name: save client.jhaugland.key remotely
   copy:
-    src: temp/client.jhaugland.key
+    src: "temp/{{ region }}/client.jhaugland.key"
     dest: /home/adminuser/certs/client.jhaugland.key
     remote_src: false
     owner: adminuser
