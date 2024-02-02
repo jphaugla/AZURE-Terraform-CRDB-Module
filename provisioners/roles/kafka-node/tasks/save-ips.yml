@@ -1,0 +1,26 @@
+- name: Get the IPs
+  set_fact:
+    ip_ext_node: "{{ inventory_hostname }}"
+    ip_int_node: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+- name: save external ip
+  copy:
+    content: "{{ ip_ext_node }}"
+    dest: kafka_external_ip.txt
+
+- name: save external ip locally
+  fetch:
+    dest: "temp/{{ region }}/"
+    src: kafka_external_ip.txt
+    flat: yes
+
+- name: save internal ip
+  copy:
+    content: "{{ ip_int_node }}"
+    dest: kafka_internal_ip.txt
+
+- name: save internal ip locally
+  fetch:
+    dest: "temp/{{ region }}/"
+    src: kafka_internal_ip.txt
+    flat: yes

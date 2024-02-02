@@ -1,0 +1,4 @@
+- name: install cockroach-sql
+  become: yes
+  shell:
+    cmd: "curl https://binaries.cockroachdb.com/cockroach-sql-v{{crdb_version}}.linux-amd64.tgz | tar -xz && cp -i cockroach-sql-v{{crdb_version}}.linux-amd64/cockroach-sql /usr/local/bin/"

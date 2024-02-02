@@ -1,0 +1,24 @@
+- name: Create a directory if it does not exist
+  become: yes
+  ansible.builtin.file:
+    path: /opt
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: wget cdc-sink
+  become: yes
+  unarchive:
+    src: https://storage.googleapis.com/cdc-sink-binaries/cdc-sink-linux-amd64-master.tgz
+    dest: /opt
+    remote_src: yes
+
+- name: create cdc_sink link
+  become: yes
+  file:
+    src: /opt/cdc-sink-linux-amd64-master/cdc-sink
+    dest:  /usr/bin/cdc-sink
+    owner: root
+    group: root
+    state: link

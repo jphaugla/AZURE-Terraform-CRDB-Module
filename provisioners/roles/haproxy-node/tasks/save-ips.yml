@@ -1,0 +1,33 @@
+- name: Get the IPs
+  set_fact:
+    ip_ext_node: "{{ inventory_hostname }}"
+    ip_int_node: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+- name: save external ip to haproxy node
+  copy:
+    content: "{{ ip_ext_node }}"
+    dest: haproxy_external_ip.txt
+
+- name: Create local directory
+  ansible.builtin.file:
+    path: "temp/{{ region }}/"
+    state: directory
+  register: local_dir
+  delegate_to: localhost
+
+- name: save external ip locally
+  fetch:
+    dest: "temp/{{ region }}/"
+    src: haproxy_external_ip.txt
+    flat: yes
+
+- name: save internal ip to haproxy node
+  copy:
+    content: "{{ ip_int_node }}"
+    dest: haproxy_internal_ip.txt
+
+- name: save internal ip locally
+  fetch:
+    dest: "temp/{{ region }}/"
+    src: haproxy_internal_ip.txt
+    flat: yes
