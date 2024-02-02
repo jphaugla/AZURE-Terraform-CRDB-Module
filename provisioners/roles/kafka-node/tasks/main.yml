@@ -40,6 +40,8 @@
   delay: 10
   register: result
   until: result.rc == 0
+  when:
+    - start_confluent|bool
 
 - name: add password to cockroach admin role
   include_tasks: add-password.yml

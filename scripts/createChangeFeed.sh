@@ -1,0 +1,1 @@
+cockroach sql --url --execute "CREATE CHANGEFEED FOR TABLE movr.users,movr.vehicles,movr.rides,movr.vehicle_location_histories,movr.promo_codes,movr.user_promo_codes INTO 'webhook-https://cdc-sink:30004/movr/public?insecure_tls_skip_verify=true' WITH updated, resolved='10s';"
