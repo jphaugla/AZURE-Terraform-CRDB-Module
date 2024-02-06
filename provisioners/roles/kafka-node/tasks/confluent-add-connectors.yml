@@ -9,7 +9,7 @@
     body_format: json
     headers:
         Content-Type: "application/json"
-  ignore_errors: true
+    status_code: [200, 201]
 
 - name: delete cockroach sink connector
   uri:
@@ -20,7 +20,7 @@
     follow_redirects: all
     headers:
         Content-Type: "application/json"
-  ignore_errors: true
+    status_code: [200, 201, 204, 404]
 
 - name: Creating cockroach sink connector
   uri:
@@ -33,4 +33,4 @@
     body_format: json
     headers:
         Content-Type: "application/json"
-  ignore_errors: true
+    status_code: [200, 201]

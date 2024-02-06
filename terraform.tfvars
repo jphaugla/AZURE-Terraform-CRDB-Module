@@ -86,12 +86,14 @@ install_system_location_data = "yes"
 # Ansible variables
 # ----------------------------------------
 instances_inventory_file = "inventory"
+instances_inventory_directory = "../provisioners"
+inventory_template_file = "../templates/inventory.tpl"
 ansible_verbosity_switch = ""
-test-publisher = "Canonical"
 
 # ----------------------------------------
 # Image parameters for Kafka
 # ----------------------------------------
+test-publisher = "Canonical"
 test-offer     = "0001-com-ubuntu-server-jammy"
 test-sku       = "22_04-lts-gen2"
 test-version   = "latest"

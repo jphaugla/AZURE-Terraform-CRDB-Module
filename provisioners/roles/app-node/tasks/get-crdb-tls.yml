@@ -1,4 +1,22 @@
 # save tls keys from app node to local machine
+- name: Changing perm of ca.crt
+  file: 
+    path: /home/adminuser/certs/ca.crt
+    state: file
+    mode: 0644
+
+- name: Changing perm of client.jhaugland.crt
+  file: 
+    path: /home/adminuser/certs/client.jhaugland.crt
+    state: file
+    mode: 0644
+
+- name: Changing perm of client.jhaugland.key
+  file: 
+    path: /home/adminuser/certs/client.jhaugland.key
+    state: file
+    mode: 0644
+
 - name: save ca.crt  locally
   fetch:
     dest: "temp/{{ region }}/ca.crt"

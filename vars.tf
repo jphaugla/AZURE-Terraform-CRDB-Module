@@ -368,8 +368,18 @@
     }
 
     variable "instances_inventory_file" {
-        description = "Path and file name to send inventory details for ansible later."
+        description = "File name to send inventory details for ansible later."
         default = "inventory"
+    }
+
+    variable "instances_inventory_directory" {
+        description = "Path to send inventory details for ansible later."
+        default = "../provisioners"
+    }
+
+    variable "inventory_template_file" {
+        description = "File name and Path to for inventory template file."
+        default = "../templates/inventory.tpl"
     }
 
     variable "ansible_verbosity_switch" {

@@ -1,3 +1,2 @@
 save_ips: true
-get_tls: true
-install_cdc_sink: true
+get_crdb_tls: true

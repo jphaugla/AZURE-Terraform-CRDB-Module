@@ -2,27 +2,23 @@
 
 - name: create certs dir
   file:
-    path: /home/adminuser/certs
+    path: /root/certs
     state: directory
-    owner: adminuser
   
 - name: save ca.crt  remotely
   copy:
     src: "temp/{{ region }}/ca.crt"
-    dest: /home/adminuser/certs/ca.crt
+    dest: /root/certs/ca.crt
     remote_src: false
-    owner: adminuser
 
-- name: save client.jhaugland.crt remotely
+- name: save client.root.crt remotely
   copy:
-    src: "temp/{{ region }}/client.jhaugland.crt"
-    dest: /home/adminuser/certs/client.jhaugland.crt
+    src: "temp/{{ region }}/client.root.crt"
+    dest: /root/certs/client.root.crt
     remote_src: false
-    owner: adminuser
 
 - name: save client.jhaugland.key remotely
   copy:
-    src: "temp/{{ region }}/client.jhaugland.key"
-    dest: /home/adminuser/certs/client.jhaugland.key
+    src: "temp/{{ region }}/client.root.key"
+    dest: /root/certs/client.root.key
     remote_src: false
-    owner: adminuser

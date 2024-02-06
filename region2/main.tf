@@ -93,11 +93,11 @@ module "azure" {
 # ----------------------------------------
    instances_inventory_file = "inventory"
    ansible_verbosity_switch = ""
-   test-publisher = "Canonical"
    
 # ----------------------------------------
 # Image parameters for Kafka
 # ----------------------------------------
+   test-publisher = "Canonical"
    test-offer     = "0001-com-ubuntu-server-jammy"
    test-sku       = "22_04-lts-gen2"
    test-version   = "latest"

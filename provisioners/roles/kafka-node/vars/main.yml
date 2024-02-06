@@ -3,14 +3,14 @@ confluent_version: '7.5.1'
 confluent_folder: '7.5'
 installation_dir : /opt
 username: "{{ansible_user}}"
-get_tls: true
+get_tls: false
+install_cockroach_sql: true
 install_confluent: true
+plugin_confluent: true
 create_confluent_properties: true
 start_confluent: true
-plugin_confluent: true
-add_connectors: true
 add_password: true
-install_cockroach_sql: true
+add_connectors: true
 #  this hostname is hardcoded additionally in the playbook
 use_hostname: kafka
 connect_endpoint: http://localhost:8083

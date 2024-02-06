@@ -3,3 +3,7 @@
   when:
     - save_ips|bool
 
+- name: save root crt keys
+  include_tasks: get-crdb-tls.yml
+  when:
+    - get_crdb_tls|bool
