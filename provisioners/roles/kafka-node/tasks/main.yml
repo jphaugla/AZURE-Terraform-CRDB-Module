@@ -1,3 +1,9 @@
+- meta: end_play
+  when: include_kafka != "yes"
+
+- name: gather_facts 
+  setup:
+
 - name: save external and internal ip addresses
   include_tasks: save-ips.yml
   when:
@@ -42,11 +48,6 @@
   until: result.rc == 0
   when:
     - start_confluent|bool
-
-- name: add password to cockroach admin role
-  include_tasks: add-password.yml
-  when:
-    - add_password|bool
 
 - name: add confluent connectors
   include_tasks: confluent-add-connectors.yml

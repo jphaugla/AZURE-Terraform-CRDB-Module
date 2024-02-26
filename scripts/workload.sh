@@ -1,0 +1,1 @@
+nohup cockroach workload --duration '5m' run movr "postgresql://root@localhost:26257/?sslmode=verify-full&sslrootcert=certs/ca.crt&sslcert=certs/client.root.crt&sslkey=certs/client.root.key" > /tmp/workload-run.out 2>&1 &

@@ -1,0 +1,21 @@
+# save tls keys from app node to local machine
+- name: save ca.crt  locally
+  fetch:
+    dest: "temp/{{ region }}/ca.crt"
+    src: /home/adminuser/certs/ca.crt
+    flat: yes
+  ignore_errors: true
+
+- name: save client.root.crt locally
+  fetch:
+    dest: "temp/{{ region }}/client.root.crt"
+    src: /home/adminuser/certs/client.root.crt
+    flat: yes
+  ignore_errors: true
+
+- name: save client.root.key locally
+  fetch:
+    dest: "temp/{{ region }}/client.root.key"
+    src: /home/adminuser/certs/client.root.key
+    flat: yes
+  ignore_errors: true

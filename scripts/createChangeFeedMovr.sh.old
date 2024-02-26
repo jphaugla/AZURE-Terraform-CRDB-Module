@@ -1,0 +1,14 @@
+#  must modify this for correct IP addresses
+export REGION=eastus2
+export ROOT_TEMP=../provisioners/temp/${REGION}
+echo root temp is ${ROOT_TEMP}
+echo "get app node internal ip address, for creating change feed"
+echo "get haproxy node external ip address, for creating change feed"
+export HAPROXY_EXT=`cat ${ROOT_TEMP}/haproxy_external_ip.txt`
+echo "HAPROXY EXT is ${HAPROXY_EXT}"
+export APP_INT=`cat ${ROOT_TEMP}/app_internal_ip.txt`
+echo "APP_INT is ${APP_INT}"
+export URL="postgresql://root:jasonrocks@${SRC_HAPROXY}:26257/ycsb?sslmode=require"
+echo ${URL}
+cockroach workload run movr $URL 
+cockroach sql --url $URL --execute "CREATE CHANGEFEED FOR TABLE movr.users,movr.vehicles,movr.rides,movr.vehicle_location_histories,movr.promo_codes,movr.user_promo_codes INTO 'webhook-https://${APP_INT}:30004/movr/public?insecure_tls_skip_verify=true' WITH updated, resolved='10s';"

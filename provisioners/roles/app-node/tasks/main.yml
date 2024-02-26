@@ -12,3 +12,8 @@
   include_tasks: install-cdc-sink.yml
   when:
     - install_cdc_sink|bool
+
+- name: add password to cockroach admin role
+  include_tasks: add-password.yml
+  when:
+    - add_password|bool

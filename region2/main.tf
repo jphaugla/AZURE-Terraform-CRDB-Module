@@ -80,7 +80,7 @@ module "azure" {
 # ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
-   include_kafka           = "yes"
+   include_kafka           = "no"
    kafka_vm_size            = "Standard_B4ms"
    
 # ----------------------------------------

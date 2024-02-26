@@ -11,15 +11,16 @@
   roles:
     - app-node
 - hosts: kafka_node_ips
-  gather_facts: True
+  gather_facts: false
   become: yes
   become_user: root
   become_method: sudo
   pre_tasks:
   - name: Update Apt Cache
     apt: update_cache=yes
-    when: ansible_os_family == "Debian"
+    when: include_kafka == "yes"
   - name: Ubuntu Packages
+    when: include_kafka == "yes"
     package:
       pkg:
         - build-essential
@@ -38,9 +39,11 @@
         - nginx
         - unzip
   - name: Set to Realistic Hostname
+    when: include_kafka == "yes"
     hostname:
       name: "kafka"
   - name: Setup Hostsfile
+    when: include_kafka == "yes"
     lineinfile:
       dest: /etc/hosts
       regexp: '^127\.0\.0\.1[ \t]+localhost'
@@ -48,6 +51,7 @@
       state: present
   handlers:
   - name: restart_nginx
+    when: include_kafka == "yes"
     service:
       name: nginx
       state: restarted

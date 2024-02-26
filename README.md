@@ -118,7 +118,8 @@ jhaugland@192.168.3.103:26257/defaultdb> select * from transactions limit 10;
 * Under each of these roles, a vars/main.yml file has variable flags to enable/disable processing
   * To eliminate all process on one of these node groups, best to set the node count to zero in terraform.tfvars
 * Under each of these roles  a tasks/main.yml calls the required tasks to do the actual processing
-
+* Alternatively, can use sub-folders region1 and region2 for the desired parameters.  These also have additional parameters to kafka and cdc-sink.
+* cdc-sink is also installed on the testernode
 To tear it all down:
 NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command will eventually be successful
 ```bash
