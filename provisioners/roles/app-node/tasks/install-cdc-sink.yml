@@ -1,6 +1,6 @@
 - name: Create a directory if it does not exist
   become: yes
-  ansible.builtin.file:
+  file:
     path: /opt
     state: directory
     mode: '0755'

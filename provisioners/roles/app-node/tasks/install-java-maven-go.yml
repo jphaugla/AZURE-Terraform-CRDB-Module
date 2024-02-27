@@ -1,0 +1,67 @@
+- name: Install the latest version of Java 17
+  become: yes
+  yum:
+    name: java-17-openjdk
+    state: latest
+
+- name: Add Golang PPA
+  become: yes
+  apt_repository:
+    repo: 'ppa:longsleep/golang-backports'
+    state: present
+  ignore_errors: true
+
+- name: Install Go
+  become: yes
+  package:
+    name: golang
+
+- name: create binaries dir
+  file:
+    path: /home/adminuser/binaries
+    owner: adminuser
+    group: adminuser
+    mode: '0755'
+    state: directory
+
+- name: configure java
+  become: yes
+  shell:
+   cmd: |
+     cat <<EOF | sudo tee /etc/profile.d/jdk18.sh
+     export JAVA_HOME=/usr/lib/jvm/java-18-openjdk-amd64
+     EOF
+
+- name: wget maven
+  become: yes
+  unarchive:
+    src: https://dlcdn.apache.org/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz
+    dest: /opt
+    remote_src: yes
+
+- name: create simple maven link
+  become: yes
+  file:
+   src: /opt/apache-maven-{{ maven_version }}
+   dest:  /opt/maven
+   owner: root
+   group: root
+   state: link
+
+- name: configure maven
+  become: yes
+  shell:
+   cmd: |
+     cat <<EOF | sudo tee /etc/profile.d/maven.sh
+     export JAVA_HOME=/usr/lib/jvm/java-18-openjdk-amd64
+     export M2_HOME=/opt/maven
+     export MAVEN_HOME=/opt/maven
+     export PATH=\$PATH:\$M2_HOME/bin
+     EOF
+
+- name: chmod maven
+  become: yes
+  file:
+   dest: /etc/profile.d/maven.sh
+   state: touch
+   mode: +x

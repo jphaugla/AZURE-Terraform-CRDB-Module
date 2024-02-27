@@ -17,3 +17,8 @@
   include_tasks: add-password.yml
   when:
     - add_password|bool
+
+- name: install java maven and go
+  include_tasks: install-java-maven-go.yml
+  when:
+    - install_java_maven_go|bool

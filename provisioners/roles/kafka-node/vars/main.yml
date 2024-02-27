@@ -3,7 +3,8 @@ confluent_version: '7.5.1'
 confluent_folder: '7.5'
 installation_dir : /opt
 username: "{{ansible_user}}"
-get_tls: true
+#  this is not longer needed-leave it false
+get_tls: false
 install_cockroach_sql: true
 install_confluent: true
 plugin_confluent: true
