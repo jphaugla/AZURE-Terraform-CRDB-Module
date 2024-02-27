@@ -22,3 +22,8 @@
   include_tasks: install-java-maven-go.yml
   when:
     - install_java_maven_go|bool
+
+- name: add githubs
+  include_tasks: add-githubs.yml
+  when:
+    - add_githubs|bool

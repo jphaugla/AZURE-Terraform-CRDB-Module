@@ -2,6 +2,7 @@ save_ips: true
 # no longer needed-leave false
 get_tls: false
 install_cdc_sink: true
+add_githubs: true
 add_password: true
 #  WARN-this version changes really fast and aborts when specified not found
 maven_version: '3.9.6'

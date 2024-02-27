@@ -1,7 +1,13 @@
-- name: Install the latest version of Java 17
+- name: Install the latest version of Java 17 openjdk
   become: yes
   yum:
     name: java-17-openjdk
+    state: latest
+
+- name: Install the latest version of Java 17 jre
+  become: yes
+  yum:
+    name: java-17-openjdk-devel
     state: latest
 
 - name: Add Golang PPA
@@ -28,8 +34,8 @@
   become: yes
   shell:
    cmd: |
-     cat <<EOF | sudo tee /etc/profile.d/jdk18.sh
-     export JAVA_HOME=/usr/lib/jvm/java-18-openjdk-amd64
+     cat <<EOF | sudo tee /etc/profile.d/jdk17.sh
+     export JAVA_HOME=/usr/lib/jvm/jre-17-openjdk
      EOF
 
 - name: wget maven
