@@ -4,15 +4,19 @@
     path: /opt
     state: directory
     mode: '0755'
-    owner: root
-    group: root
+    owner: adminuser
+    group: adminuser
 
 - name: wget cdc-sink
-  become: yes
   unarchive:
     src: https://storage.googleapis.com/cdc-sink-binaries/cdc-sink-linux-amd64-master.tgz
     dest: /opt
     remote_src: yes
+
+- name: wget repl.ts
+  get_url:
+    url: https://raw.githubusercontent.com/cockroachdb/cdc-sink/master/scripts/active_active/userscripts/repl.ts 
+    dest: /opt/cdc-sink-linux-amd64-master
 
 - name: create cdc_sink link
   become: yes
@@ -22,3 +26,13 @@
     owner: root
     group: root
     state: link
+
+- name: save typescript program
+  copy:
+    content: "{{ lookup('template','cluster-ts.j2') }}"
+    dest: /opt/cdc-sink-linux-amd64-master/cluster.ts
+
+- name: save start script
+  copy:
+    content: "{{ lookup('template','start-cdc-sink.j2') }}"
+    dest: /opt/cdc-sink-linux-amd64-master/start.sh

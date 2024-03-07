@@ -8,7 +8,7 @@ module "azure" {
 # Globals
 # ----------------------------------------
    owner                      = "jphaugland"
-   resource_name              = "centralus" # This is NOT the resource group name, but is used to form the resource group name unless it is passed in as multi-region-resource-group-name
+   resource_name              = "central-roach" # This is NOT the resource group name, but is used to form the resource group name unless it is passed in as multi-region-resource-group-name
    multi_region               = false
    
 # ----------------------------------------
@@ -32,7 +32,7 @@ module "azure" {
 # ----------------------------------------
 # Network
 # ----------------------------------------
-   virtual_network_cidr       = "192.168.3.0/24"
+   virtual_network_cidr       = "192.168.2.0/24"
    virtual_network_location   = "centralus"
    
 # ----------------------------------------
@@ -53,7 +53,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "23.1.14"
+   crdb_version               = "23.2.0"
    
 # ----------------------------------------
 # Cluster Enterprise License Keys

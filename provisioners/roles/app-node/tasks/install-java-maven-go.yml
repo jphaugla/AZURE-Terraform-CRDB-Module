@@ -10,17 +10,10 @@
     name: java-17-openjdk-devel
     state: latest
 
-- name: Add Golang PPA
-  become: yes
-  apt_repository:
-    repo: 'ppa:longsleep/golang-backports'
-    state: present
-  ignore_errors: true
-
 - name: Install Go
   become: yes
   package:
-    name: golang
+    name: go-toolset
 
 - name: create binaries dir
   file:
@@ -59,7 +52,7 @@
   shell:
    cmd: |
      cat <<EOF | sudo tee /etc/profile.d/maven.sh
-     export JAVA_HOME=/usr/lib/jvm/java-18-openjdk-amd64
+     export JAVA_HOME=/usr/lib/jvm/jre-17-openjdk
      export M2_HOME=/opt/maven
      export MAVEN_HOME=/opt/maven
      export PATH=\$PATH:\$M2_HOME/bin

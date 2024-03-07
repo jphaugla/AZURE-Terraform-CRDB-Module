@@ -13,17 +13,28 @@
   when:
     - install_cdc_sink|bool
 
-- name: add password to cockroach admin role
-  include_tasks: add-password.yml
-  when:
-    - add_password|bool
-
 - name: install java maven and go
   include_tasks: install-java-maven-go.yml
   when:
     - install_java_maven_go|bool
 
+- name: install nodejs and typescript
+  include_tasks: install-nodejs-typescript.yml
+  when:
+    - install_nodejs_typescript|bool
+
 - name: add githubs
   include_tasks: add-githubs.yml
   when:
     - add_githubs|bool
+
+- name: add password to cockroach admin role
+  include_tasks: add-password.yml
+  when:
+    - add_password|bool
+
+- name: create cdc-sink
+  include_tasks: create-cdc-sink.yml
+  when:
+    - create_cdc_sink|bool
+

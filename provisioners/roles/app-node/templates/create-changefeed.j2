@@ -1,0 +1,1 @@
+/usr/local/bin/cockroach-sql sql --host={{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}} --certs-dir=certs --user=jhaugland --execute "CREATE CHANGEFEED FOR TABLE kv.kv INTO 'webhook-https://{{lookup('file', './temp/{{region}}/app_internal_ip.txt')}}:30004/kv/public?insecure_tls_skip_verify=true' WITH diff, updated, resolved='5s';"

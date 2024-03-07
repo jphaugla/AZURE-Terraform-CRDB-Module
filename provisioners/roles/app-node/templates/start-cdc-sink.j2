@@ -1,0 +1,5 @@
+# this must be the public haproxy host on the other cluster and the haproxy port must be open
+cd /opt/cdc-sink-linux-amd64-master
+sudo mkdir -p /mnt/datat1/cdc-sink
+sudo chmod 777 /mnt/datat1/cdc-sink
+nohup sudo ./cdc-sink start  --bindAddr :30004 --metricsAddr :30005 --tlsSelfSigned --disableAuthentication --targetConn 'postgres://jhaugland:jasonrocks@{{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}}:26257/defaultdb?sslmode=require' --userscript ./cluster.ts --parallelism=1 -v -v > /mnt/datat1/cdc-sink/cdc-sink.log 2>&1 &

@@ -1,0 +1,7 @@
+# add cdc-sink configuration to app node
+- name: enable rangefeed
+  command: "{{ lookup('template','enable-rangefeed.j2') }}"
+- name: create _cdc_sink database
+  command: "{{ lookup('template','create-cdc-sink-db.j2') }}"
+- name: create dead letter queue
+  command: "{{ lookup('template','dead-letter.j2') }}"
