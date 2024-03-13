@@ -37,6 +37,3 @@
     content: "{{ lookup('template','start-cdc-sink.j2') }}"
     dest: /opt/cdc-sink-linux-amd64-master/start.sh
     mode: '0755'
-
-- name: start cdc-sink
-  shell:  /opt/cdc-sink-linux-amd64-master/start.sh
