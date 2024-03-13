@@ -7,3 +7,9 @@
   include_tasks: get-crdb-tls.yml
   when:
     - get_crdb_tls|bool
+
+- name: save changefeed shell script
+  copy:
+    content: "{{ lookup('template','create-changefeed.j2') }}"
+    dest: create-changefeed.sh
+    mode: '0755'
