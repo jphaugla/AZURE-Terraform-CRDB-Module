@@ -3,6 +3,9 @@
   when:
     - save_ips|bool
 
+- name: create log directories
+  include_tasks: create-dirs.yml
+
 - name: save tls files locally
   include_tasks: get-crdb-tls.yml
   when:
@@ -33,8 +36,12 @@
   when:
     - add_password|bool
 
+- name: start java application
+  include_tasks: start-java-app.yml
+  when:
+    - start_java_app|bool
+
 - name: create cdc-sink
   include_tasks: create-cdc-sink.yml
   when:
     - create_cdc_sink|bool
-

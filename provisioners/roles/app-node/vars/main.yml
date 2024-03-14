@@ -3,11 +3,12 @@ save_ips: true
 get_tls: false
 install_cdc_sink: true
 create_cdc_sink: true
+start_java_app: true
 add_githubs: true
 add_password: true
 #  WARN-this version changes really fast and aborts when specified not found
 maven_version: '3.9.6'
-#  this works fine but the maven version keeps changing so setting to false
+#  this works fine but the maven version keeps changing so setting to true
 install_java_maven_go: true
 install_nodejs_typescript: true
 nvm_version: "0.39.1"

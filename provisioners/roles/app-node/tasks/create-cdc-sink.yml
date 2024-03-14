@@ -6,4 +6,6 @@
 - name: create dead letter queue
   command: "{{ lookup('template','dead-letter.j2') }}"
 - name: start cdc-sink
-  shell:  /opt/cdc-sink-linux-amd64-master/start.sh
+  shell: 
+    cmd: "( nohup ./start.sh > /mnt/datat1/cdc-sink/cdc-sink.log 2>&1 & )"
+    chdir: /opt/cdc-sink-linux-amd64-master/

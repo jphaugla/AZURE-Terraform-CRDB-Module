@@ -1,4 +1,6 @@
+# ignore errors because get an error if running this second time after updating scripts/setEnv.sh
 - name: checkout Digital Banking git repo
+  ignore_errors: yes
   git:
     repo: 'https://github.com/jphaugla/Digital-Banking-CockroachDB'
     dest: /home/adminuser/Digital-Banking-CockroachDB

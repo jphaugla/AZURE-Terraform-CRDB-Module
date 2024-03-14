@@ -1,0 +1,17 @@
+- name: make log cdc-sink directory
+  become: yes
+  file: 
+    path: /mnt/datat1/cdc-sink
+    state: directory
+    mode: '0777'
+    owner: adminuser
+    group: adminuser
+
+- name: make app log directory
+  become: yes
+  file: 
+    path: /mnt/datat1/bank-app
+    state: directory
+    mode: '0777'
+    owner: adminuser
+    group: adminuser
