@@ -9,9 +9,9 @@
     body_format: json
     headers:
         Content-Type: "application/json"
-    status_code: [200, 201]
+    status_code: [200, 201, 409]
 
-- name: delete cockroach sink connector
+- name: delete cockroach sink connector for datagen
   uri:
     url: "{{connect_endpoint}}/connectors/cockroach-sink-json"
     method: DELETE
@@ -22,7 +22,7 @@
         Content-Type: "application/json"
     status_code: [200, 201, 204, 404]
 
-- name: Creating cockroach sink connector
+- name: Creating cockroach sink connector for datagen
   uri:
     url: "{{connect_endpoint}}/connectors"
     method: POST
@@ -30,6 +30,38 @@
     validate_certs: no
     follow_redirects: all
     body: "{{ lookup('template','cockroach-sink-json.j2') }}"
+    body_format: json
+    headers:
+        Content-Type: "application/json"
+    status_code: [200, 201]
+
+- name: delete cockroach sink connector for java app
+  uri:
+    url: "{{connect_endpoint}}/connectors/cockroach-sink-json-transform"
+    method: DELETE
+    return_content: yes
+    validate_certs: no
+    follow_redirects: all
+    headers:
+        Content-Type: "application/json"
+    status_code: [200, 201, 204, 404]
+
+- name: create sample transaction to create topic
+  get_url:
+    url: "http://{{lookup('file', './temp/{{region}}/app_internal_ip.txt')}}:8080/api/transaction/save?doKafka=true&accountId=3bb4822a-4a83-42e4-a9cd-ad095d0eaed3"
+    validate_certs: false
+    dest: ./topic.log
+    headers:
+        Content-Type: "application/json"
+
+- name: Creating cockroach sink connector for java app
+  uri:
+    url: "{{connect_endpoint}}/connectors"
+    method: POST
+    return_content: yes
+    validate_certs: no
+    follow_redirects: all
+    body: "{{ lookup('template','java-app-transform.j2') }}"
     body_format: json
     headers:
         Content-Type: "application/json"

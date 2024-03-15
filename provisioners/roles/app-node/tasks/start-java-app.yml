@@ -7,9 +7,9 @@
 - name: compile application
   shell:
     cmd: mvn clean package
-    chdir: Digital-Banking-CockroachDB
+    chdir: /home/adminuser/Digital-Banking-CockroachDB
 
 - name: run application
   shell: 
     cmd: "( nohup  ./runApp.sh > /mnt/datat1/bank-app/app.log 2>&1  & )"
-    chdir: Digital-Banking-CockroachDB
+    chdir: /home/adminuser/Digital-Banking-CockroachDB
