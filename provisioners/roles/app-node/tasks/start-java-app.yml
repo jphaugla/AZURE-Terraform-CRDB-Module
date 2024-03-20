@@ -13,3 +13,15 @@
   shell: 
     cmd: "( nohup  ./runApp.sh > /mnt/datat1/bank-app/app.log 2>&1  & )"
     chdir: /home/adminuser/Digital-Banking-CockroachDB
+
+- name: pause a few seconds
+  pause:
+    seconds: 20
+
+#  run the application a second time as it seems to fail the first time and
+#  work the second time-obviously, this is a kludge
+#  NOTE:  it is using two different log files so can see if either or neither worked
+- name: run application again
+  shell: 
+    cmd: "( nohup  ./runApp.sh > /mnt/datat1/bank-app/app2.log 2>&1  & )"
+    chdir: /home/adminuser/Digital-Banking-CockroachDB

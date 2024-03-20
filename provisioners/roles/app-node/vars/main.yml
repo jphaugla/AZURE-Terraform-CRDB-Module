@@ -1,7 +1,7 @@
 save_ips: true
 # no longer needed-leave false
 get_tls: false
-install_cdc_sink: false
+install_cdc_sink: true
 #  WARN-this version changes really fast and aborts when specified not found
 maven_version: '3.9.6'
 #  this works fine but the maven version keeps changing so setting to true
