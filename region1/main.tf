@@ -73,14 +73,14 @@ module "azure" {
 # APP Instance Specifications
 # ----------------------------------------
    include_app                = "yes"
-   app_vm_size                = "Standard_B1ms"
+   app_vm_size                = "Standard_B2ms"
    app_disk_size              = 64
    app_resize_homelv          = "no"  # if the app_disk_size is greater than 64, then set this to "yes" so that the disk will be resized.  See warnings in vars.tf!
    
 # ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
-   include_kafka           = "no"
+   include_kafka           = "yes"
    kafka_vm_size            = "Standard_B4ms"
    
 # ----------------------------------------

@@ -1,7 +1,7 @@
-listeners=http://{{lookup('file', './temp/{{region}}/kafka_internal_ip.txt')}}:8088
+listeners=http://{{kafka_internal_ip}}:8088
 ksql.logging.processing.topic.auto.create=true
 ksql.logging.processing.stream.auto.create=true
-bootstrap.servers={{lookup('file', './temp/{{region}}/kafka_internal_ip.txt')}}:9092
+bootstrap.servers={{kafka_internal_ip}}:9092
 compression.type=snappy
-ksql.schema.registry.url=http://{{lookup('file', './temp/{{region}}/kafka_internal_ip.txt')}}:8081
+ksql.schema.registry.url=http://{{kafka_internal_ip}}:8081
 state.dir=/var/lib/kafka-streams

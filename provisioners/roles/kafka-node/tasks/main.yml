@@ -23,6 +23,7 @@
   include_tasks: confluent-install.yml
   when:
     - install_confluent|bool
+
 #  must happen before confluent connect is started or plugins won't be usable until connect restart
 - name: add confluent plug-ins
   include_tasks: confluent-connect-plug.yml
@@ -32,8 +33,13 @@
 - name: confluent property file cretion
   include_tasks: confluent-properties.yml
   when:
-
     - create_confluent_properties|bool
+
+- name: create der certs
+  include_tasks: create-der-certs.yml
+  when:
+    - create_der_certs|bool
+
 - name: confluent start
   include_tasks: confluent-start.yml
   when:

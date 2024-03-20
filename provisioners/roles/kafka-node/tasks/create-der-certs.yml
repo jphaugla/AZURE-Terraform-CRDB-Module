@@ -1,0 +1,34 @@
+# create der certs
+- name: create ca.crt.der
+  shell: 
+    cmd: "openssl x509 -outform der -in ca.crt -out ca.crt.der"
+    chdir: /home/adminuser/certs
+
+- name: change ca.crt.der owner
+  file: 
+    path: /home/adminuser/certs/ca.crt.der
+    owner: adminuser
+    group: adminuser
+
+- name: create client.jhaugland.crt.der
+  shell: 
+    cmd: "openssl x509 -outform der -in client.jhaugland.crt -out client.jhaugland.crt.der"
+    chdir: /home/adminuser/certs
+
+- name: change client.jhaugland.crt.der
+  file: 
+    path: /home/adminuser/certs/client.jhaugland.crt.der
+    owner: adminuser
+    group: adminuser
+
+- name: create client.jhaugland.key.der
+  shell: 
+    cmd: "openssl pkcs8 -topk8 -inform PEM -outform DER -in client.jhaugland.key -out client.jhaugland.key.der -nocrypt"
+    chdir: /home/adminuser/certs
+
+- name: change client.jhaugland.key.der
+  file: 
+    path: /home/adminuser/certs/client.jhaugland.key.der
+    owner: adminuser
+    group: adminuser
+

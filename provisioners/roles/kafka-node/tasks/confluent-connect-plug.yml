@@ -16,5 +16,5 @@
 - name: get new postgres jdbc driver
   become: yes
   get_url:
-    url: https://jdbc.postgresql.org/download/postgresql-42.7.1.jar 
+    url: https://jdbc.postgresql.org/download/postgresql-42.7.3.jar 
     dest: /usr/share/confluent-hub-components/confluentinc-kafka-connect-jdbc/lib

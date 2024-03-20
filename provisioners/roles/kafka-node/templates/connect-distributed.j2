@@ -1,4 +1,4 @@
-bootstrap.servers={{lookup('file', './temp/{{region}}/kafka_internal_ip.txt')}}:9092
+bootstrap.servers={{kafka_internal_ip}}:9092
 group.id=connect-cluster
 key.converter=org.apache.kafka.connect.json.JsonConverter
 value.converter=org.apache.kafka.connect.json.JsonConverter

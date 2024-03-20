@@ -9,6 +9,7 @@ install_cockroach_sql: true
 install_confluent: true
 plugin_confluent: true
 create_confluent_properties: true
+create_der_certs: true
 start_confluent: true
 add_connectors: true
 #  this hostname is hardcoded additionally in the playbook

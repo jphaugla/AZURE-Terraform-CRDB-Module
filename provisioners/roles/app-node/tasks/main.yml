@@ -36,6 +36,11 @@
   when:
     - add_password|bool
 
+- name: create der certs
+  include_tasks: create-der-certs.yml
+  when:
+    - create_der_certs|bool
+
 - name: start java application
   include_tasks: start-java-app.yml
   when:
