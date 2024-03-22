@@ -11,7 +11,7 @@
 
 - name: run application
   shell: 
-    cmd: "( nohup  ./runApp.sh > /mnt/datat1/bank-app/app.log 2>&1  & )"
+    cmd: "( nohup  ./runApp.sh </dev/null > /mnt/datat1/bank-app/app.log 2>&1  & )"
     chdir: /home/adminuser/Digital-Banking-CockroachDB
 
 - name: pause a few seconds
