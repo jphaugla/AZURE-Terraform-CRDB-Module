@@ -11,25 +11,35 @@
   when:
     - get_tls|bool
 
-- name: install cdc_sink
-  include_tasks: install-cdc-sink.yml
-  when:
-    - install_cdc_sink|bool
-
 - name: install java maven and go
   include_tasks: install-java-maven-go.yml
   when:
     - install_java_maven_go|bool
+
+- name: add githubs
+  include_tasks: add-githubs.yml
+  when:
+    - add_githubs|bool
+
+- name: package java application
+  include_tasks: package-java-app.yml
+  when:
+    - package_java_app|bool
+
+- name: install cdc_sink
+  include_tasks: install-cdc-sink.yml
+  when:
+    - install_cdc_sink|bool
 
 - name: install nodejs and typescript
   include_tasks: install-nodejs-typescript.yml
   when:
     - install_nodejs_typescript|bool
 
-- name: add githubs
-  include_tasks: add-githubs.yml
+- name: create cdc-sink
+  include_tasks: create-cdc-sink.yml
   when:
-    - add_githubs|bool
+    - create_cdc_sink|bool
 
 # this password is no longer needed for the application but
 # still needed for kafka
@@ -47,8 +57,3 @@
   include_tasks: start-java-app.yml
   when:
     - start_java_app|bool
-
-- name: create cdc-sink
-  include_tasks: create-cdc-sink.yml
-  when:
-    - create_cdc_sink|bool

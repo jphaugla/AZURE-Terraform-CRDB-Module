@@ -1,14 +1,3 @@
-- name: save environment script
-  copy:
-    content: "{{ lookup('template','setEnv.j2') }}"
-    dest: /home/adminuser/Digital-Banking-CockroachDB/scripts/setEnv.sh
-    mode: '0755'
-
-- name: compile application
-  shell:
-    cmd: mvn clean package
-    chdir: /home/adminuser/Digital-Banking-CockroachDB
-
 - name: run application
   shell: 
     cmd: "( nohup  ./runApp.sh </dev/null > /mnt/datat1/bank-app/app.log 2>&1  & )"
