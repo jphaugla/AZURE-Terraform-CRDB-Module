@@ -78,7 +78,6 @@ then
   lvresize -r -L +$ds /dev/mapper/rootvg-homelv
 fi
 
-yum install git -y
 su ${local.admin_username} -c 'mkdir /home/${local.admin_username}/certs'
 echo '${local.tls_cert}' >> /home/${local.admin_username}/certs/ca.crt 
 chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/ca.crt
@@ -92,6 +91,9 @@ chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
 
 echo "Downloading and installing CockroachDB along with the Geo binaries"
 curl https://binaries.cockroachdb.com/cockroach-sql-v${var.crdb_version}.linux-amd64.tgz | tar -xz && cp -i cockroach-sql-v${var.crdb_version}.linux-amd64/cockroach-sql /usr/local/bin/
+
+echo "yum installing git"
+yum install git -y
 
 echo "CRDB() {" >> /home/${local.admin_username}/.bashrc
 echo 'cockroach-sql sql --url "postgresql://${var.admin_user_name}@'"${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert="'$HOME/certs/ca.crt&sslcert=$HOME/certs/client.'"${var.admin_user_name}.crt&sslkey="'$HOME/certs/client.'"${var.admin_user_name}.key"'"' >> /home/${local.admin_username}/.bashrc

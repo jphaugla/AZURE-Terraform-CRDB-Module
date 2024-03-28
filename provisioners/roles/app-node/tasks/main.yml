@@ -6,11 +6,6 @@
 - name: create log directories
   include_tasks: create-dirs.yml
 
-- name: save tls files locally
-  include_tasks: get-crdb-tls.yml
-  when:
-    - get_tls|bool
-
 - name: install java maven and go
   include_tasks: install-java-maven-go.yml
   when:
@@ -36,11 +31,6 @@
   when:
     - install_nodejs_typescript|bool
 
-- name: create cdc-sink
-  include_tasks: create-cdc-sink.yml
-  when:
-    - create_cdc_sink|bool
-
 # this password is no longer needed for the application but
 # still needed for kafka
 - name: add password to cockroach admin role
@@ -52,6 +42,12 @@
   include_tasks: create-der-certs.yml
   when:
     - create_der_certs|bool
+
+- name: create cdc-sink
+  include_tasks: create-cdc-sink.yml
+  when:
+    - create_cdc_sink|bool
+
 
 - name: start java application
   include_tasks: start-java-app.yml

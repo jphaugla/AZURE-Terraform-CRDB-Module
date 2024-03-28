@@ -8,7 +8,7 @@ module "azure" {
 # Globals
 # ----------------------------------------
    owner                      = "jhaug"
-   resource_name              = "central-roach" # This is NOT the resource group name, but is used to form the resource group name unless it is passed in as multi-region-resource-group-name
+   resource_name              = "central" # This is NOT the resource group name, but is used to form the resource group name unless it is passed in as multi-region-resource-group-name
    multi_region               = false
    
 # ----------------------------------------
