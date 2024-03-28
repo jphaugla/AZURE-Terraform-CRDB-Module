@@ -1,0 +1,6 @@
+# ignore errors because get an error if running this second time after updating scripts/setEnv.sh
+- name: Install git
+  become: yes
+  yum:
+    name: git
+    state: latest

@@ -11,6 +11,11 @@
   when:
     - install_java_maven_go|bool
 
+- name: install git
+  include_tasks: install-git.yml
+  when:
+    - add_githubs|bool
+
 - name: add githubs
   include_tasks: add-githubs.yml
   when:
