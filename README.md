@@ -1,5 +1,27 @@
 # AZURE-Terraform-CRDB-Module
 
+## Outline
+- [Security Notes](#security-notes) 
+- [Using the Terraform HCL](#using-the-terraform-hcl)
+  - [Run This Terraform Script](#run-this-terraform-script)
+    - [Prepare to run](#prepare)
+    - [For Enterprise Features](#if-you-intend-to-use-enterprise-features-of-the-database)
+    - [Kick off the script](#kick-off-terraform-script)
+  - [Deploy to 2 regions](#deploy-to-2-regions-with-cdc-sink)
+    - [Run Terraform on each region](#run-terraform)
+    - [Verify Deployments](#verify-deployment)
+      - [Ensure cdc-sink running](#ensure-cdc-sink-is-running-on-each-region)
+      - [Verify application running in each region](#verify-application-running-in-each-region)
+    - [Deploy ChangeFeeds](#deploy-changefeeds)
+  - [Technical Documentation](#technical-documentation)
+    - [Azure Documentation](#azure-documentation)
+      - [resize disk](#terraform-variable-crdbresizehomelv)
+      - [Finding Images](#finding-images)
+      - [Install Terraform](#install-terraform) 
+      - [Install Azure CLI](#install-azure-cli)
+      - [Azure Links](#azure-links)
+    - [Terraform/Ansible Description](#terraformansible-documentation)
+
 ![Resources Created in the Terraform HCL](resources/azure-single-regon.drawio.png)
 
 Terraform HCL to create a multi-node CockroachDB cluster in Azure.   The number of nodes can be a multiple of 3 and nodes will be evenly distributed between 3 Azure Zones.   Optionally, you can include
@@ -21,38 +43,117 @@ git clone https://github.com/nollenr/AZURE-Terraform-CRDB-Module.git
 cd AZURE-Terraform-CRDB-Module/
 ```
 
-#### if you intend to use enterprise features of the database 
+#### if you intend to use enterprise features of the database
 ```
 export TF_VAR_cluster_organization={CLUSTER ORG}
 export TF_VAR_enterprise_license={LICENSE}
 ```
+#### Prepare
+* Use the terraform/ansible deployment using the subdirectories [region1](region1) and [region2](region2) in the deployment github
+* Can disable deployment of Kafka by setting the *include_ha_proxy* flag to "no" in [deploy main.tf](region1/main.tf)
+* Ensure *install_cdc_sink* flag and *create_cdc_sink* flag are set to true in [main.yml](provisioners/roles/app-node/vars/main.yml)
+* Ensure *install_enterprise_keys* is set in both [region1](region1) and [region2](region2)
+* Depending on needs, decide whether to deploy kafka using the *use
+* *NOTE:* Inside the application node, this [banking java application](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB) will be deployed and configured
 
-
-#### Modify the terraform.tfvars to meet your needs
-
+#### Kick off terraform script
+modify [main.tf](region1/main.tf)
 ```
+cd region1
 terraform init
 terraform plan
 terraform apply
 ```
+
 To clean up and remove everything that was created
 
 ```
 terraform destroy
 ```
+## Deploy to 2 regions with cdc-sink
 
-### terraform variable crdb_resize_homelv
-In Azure, any additional space allocated to a disk beyond the size of the image, is available but unused.  Setting the variable `crdb_resize_homelv` to "yes", will cause the user_data script to attempt to resize the home logical volume to take advantage of the additional space.  This is potentially dangerous and should only be used if you're sure that sda2 is the volume group with the homelv partition.  Typically, if you're using the standard redhat source image defined in by the instance.tf you should be fine.  
+### Run Terraform
+*  terraform apply in each region directory-reference the steps [noted above](#run-this-terraform-script)
+```bash
+export TF_VAR_cluster_organization={CLUSTER ORG}
+export TF_VAR_enterprise_license={LICENSE}
+git clone https://github.com/nollenr/AZURE-Terraform-CRDB-Module.git
+cd AZURE-Terraform-CRDB-Module/region1
+terraform init
+terraform apply
+cd AZURE-Terraform-CRDB-Module/region2
+terraform init
+terraform apply
+```
+### Verify deployment
+* This will deploy this [Digital-Banking-CockroachDB github](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB) into the application node with connectivity to cockroachDB.  
+  Additionally, cdc-sink is deployed and running on the application node also with connectivity to haproxy and cockroachDB in the same region 
 
-## Appendix 
-### Finding images
+#### Ensure cdc-sink is running on each region
+```bash
+cd ~/AZURE-Terraform-CRDB-Module/provisioners/temp/{region_name}
+ssh -i path_to_ssh_file adminuser@`cat app_external_ip.txt`
+ps -ef |grep cdc-sink
+# if it is not running, start it
+cd /opt/cdc-sink-linux-amd64-master
+./start.sh
+```
+#### Verify application running in each region
+*  NOTE:  this compiling and starting of the application step has been automated in terraform so only for debug/understanding
+* The java application needs to be started manually on the application node for each region.  Set up the [environment file](scripts/setEnv.sh)
+  * the ip addresses can be found in a subdirectory under [temp](provisioners/temp) for each deployed region
+  * Make sure to set the COCKROACH_HOST environment variable to the private IP address for the haproxy node
+  * If using kafka, KAFKA_HOST should be set to the internal IP address for kafka
+  * set the REGION to the correct region
+* do on each region
+```bash
+# NOTE: this should already be running.  If not running check log files in /mnt/datat1/bank-app
+# steps below will rerun
+cd ~/AZURE-Terraform-CRDB-Module/provisioners/temp/{region_name}
+ssh -i path_to_ssh_file adminuser@`cat app_external_ip.txt`
+cd Digital-Banking-CockroachDB
+# edit scripts/setEnv.sh as documented above
+source scripts/setEnv.sh
+mvn clean package
+java -jar target/cockroach-0.0.1-SNAPSHOT.jar
+```
+
+### Deploy changefeeds
+* The necessary manual step is to deploy a [CockroachDB Changefeed](https://www.cockroachlabs.com/docs/stable/create-changefeed) across the regions to make active/active cdc-sink between the two otherwise independent regions
+  * Port 30004 is open on both regions to allow the changefeed to communicate with the application server on the other region
+* Start the changefeed on each side with changfeed pointing to the other sids's application external IP address
+* The changefeed script is written on each of the cockroach database nodes by the terraform script.  Login to any of the cockroach
+  nodes using the IP address in [temp](provisioners/temp) for each deployed region.
+  * As previously mentioned, the changefeed script must be modified to point to the application external IP address for the other region
+  * this is the step that reaches across to the other region as everything else is within region boundaries
+* IMPORTANT NOTE:  Must have enterprise license for the changefeed to be enabled
+  * see [changefeed documentation](https://www.cockroachlabs.com/docs/stable/licensing-faqs#set-a-license)
+```bash
+cd ~/AZURE-Terraform-CRDB-Module/provisioners/temp/{region_name}
+ssh -i path_to_ssh_file adminuser@`cat crdb_external_ip{any ip_address}`
+# edit create-changefeed.sh putting the app node external IP address for the other region
+cockroach sql --host=localhost --certs-dir=certs
+SET CLUSTER SETTING cluster.organization = 'Acme Company';
+SET CLUSTER SETTING enterprise.license = 'xxxxxxxxxxxx';
+exit
+vi changefeed.sh
+./changefeed.sh
+```
+Verify rows are flowing across from either region by running the [test application steps](#test-application)
+
+## Technical Documentation
+
+### Azure Documentation
+#### terraform variable crdb_resize_homelv
+In Azure, any additional space allocated to a disk beyond the size of the image, is available but unused.  Setting the variable `crdb_resize_homelv` to "yes", will cause the user_data script to attempt to resize the home logical volume to take advantage of the additional space.  This is potentially dangerous and should only be used if you're sure that sda2 is the volume group with the homelv partition.  Typically, if you're using the standard redhat source image defined in by the instance.tf you should be fine.
+
+#### Finding images
 ```
 az vm image list -p "Canonical"
 az vm image list -p "Microsoft"
 ```
-### AZURE Terraform - CockroachDB on VM
 
-#### Install Terrafrom
+#### Install Terraform
 sudo yum install -y yum-utils
 sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
 sudo yum -y install terraform
@@ -67,7 +168,7 @@ az upgrade
 az version
 az login (directs you to a browser login with a code -- once authenticated, your credentials will be displayed in the terminal)
 
-### Links:
+#### Azure Links:
 Microsoft Terraform Docs
 https://learn.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-terraform
 
@@ -77,49 +178,44 @@ https://learn.microsoft.com/en-us/azure/virtual-machines/sizes
 User Data that is a static SH 
 https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/master/linux-vm-main.tf
 
-### Adding Kafka
-Node internal and external addresses for haproxy, the app node, and kafka dumped as appropriately named text files in the directory [provisioners/temp](provisioners/temp)
-### kafka node
-Check out the kafka control panel by substituting the localhost with the ip found in [kafka_external_ip.txt](provisioners/temp/kafka_external_ip.txt) at http://localhost:9021
-### Verify the data is correct
-* login to the admin node using the IP address at [app_external_ip](provisioners/temp/app_external_ip.txt) instead of localhost
-* use the defined function to connect to the admin user
-* verify table exists
-* verify data is flowing in
-```bash
-ssh -i localPemFile adminuser@localhost
-CRDB
-jhaugland@192.168.3.103:26257/defaultdb> \dt
-List of relations:
-  Schema |     Name     | Type  |   Owner
----------+--------------+-------+------------
-  public | transactions | table | jhaugland
-(1 row)
-jhaugland@192.168.3.103:26257/defaultdb> select * from transactions limit 10;
-  transaction_id | card_id | user_id | purchase_id | store_id
------------------+---------+---------+-------------+-----------
-               1 |      23 | User_3  |           0 |        3
-               2 |      15 | User_8  |           1 |        5
-               3 |      21 | User_6  |           2 |        1
-               4 |      16 | User_5  |           3 |        5
-               5 |      17 | User_6  |           4 |        3
-               6 |      21 | User_8  |           5 |        5
-               7 |       3 | User_   |           6 |        1
-               8 |      17 | User_9  |           7 |        6
-               9 |       5 | User_   |           8 |        3
-              10 |      13 | User_   |           9 |        5
-```
 
-## Tech notes
-* terraform.tfvars has the important parameters.  
-* A template file at templates/inventory.tpl maps connects terraform to ansible along with provisioning.tf
-* Ansible is all in the provisioners directory using the playbook.yml file
-* Each of the node groups (haproxy-node, app-node, kafka-node) have a separate role under the provisioners/roles directory 
-* Under each of these roles, a vars/main.yml file has variable flags to enable/disable processing
-  * To eliminate all process on one of these node groups, best to set the node count to zero in terraform.tfvars
-* Under each of these roles  a tasks/main.yml calls the required tasks to do the actual processing
-* Alternatively, can use sub-folders region1 and region2 for the desired parameters.  These also have additional parameters to kafka and cdc-sink.
-* cdc-sink is also installed on the testernode
+### Terraform/Ansible Documentation
+* [terraform.tfvars](terraform.tfvars) and [vars.tf](vars.tf) has important parameters.  
+* Each node type has its own tf file
+  * [application node *app.tf*](app.tf)
+  * [kafka node *kafka.tf*](kafka.tf)
+  * [haproxy node *haproxy.tf*](haproxy.tf)
+  * [cockroachDB node *instance.tf*](instance.tf)
+* Security groups with network permissions iin [network.tf](network.tf)
+* Can use either of the regions subdirectories to kick off the deployment.  Both regions are defined to enable cdc-sink deployment
+  * [region1](region1/main.tf) 
+  * [region2](region2/main.tf)
+* These files connect terraform and ansible
+  * template file at [inventory.tpl](templates/inventory.tpl)
+  * [provisioning.tf](provisioning.tf) 
+  * [inventory.tf](inventory.tf)
+* Ansible code is in the [provisioners/roles](provisioners/roles) subdirectory
+  * [playbook.yml](provisioners/playbook.yml) 
+  * Each node group has a subdirectory under [provisioners/roles](provisioners/roles)
+    * Each node group has ansible code to export the node's private and public ip addresses to a region subdirectory under [provisioners/temp](provisioners/temp)
+    * [haproxy-node](provisioners/roles/haproxy-node)  doesn't have any additional code
+    * [app-node](provisioners/roles/app-node) creates an application node running cdc-sink and a Digital Banking java application
+      * cdc-sink is [installed](provisioners/roles/app-node/tasks/install-cdc-sink.yml) and [started](provisioners/roles/app-node/tasks/create-cdc-sink.yml)
+        * cdc-sink needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
+      * banking java application is [installed](provisioners/roles/app-node/tasks/package-java-app.yml) and [started](provisioners/roles/app-node/tasks/start-java-app.yml)
+        * banking java application needs these tasks to run as well:
+          * [java installed](provisioners/roles/app-node/tasks/install-java-maven-go.yml)
+          * [make der certs](provisioners/roles/app-node/tasks/create-der-certs.yml)
+          * [ensure git installed](provisioners/roles/app-node/tasks/install-git.yml) and [bank github cloned](provisioners/roles/app-node/tasks/add-githubs.yml)
+    * [kafka-node](provisioners/roles/kafka-node)
+    * [crdb-node](provisioners/roles/crdb-node)
+      * For using cdc-sink, a changefeed script is [created](provisioners/roles/kafka-node/tasks/main.yml) using a [j2 template](provisioners/roles/crdb-node/templates/create-changefeed.j2)
+
+  * Under each of these node groups
+    * A vars/main.yml file has variable flags to enable/disable processing
+    * A tasks/main.yml calls the required tasks to do the actual processing
+    * A templates directory has j2 files allowing environment variable and other substitution
+* cdc-sink is also installed on the application node
 To tear it all down:
 NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command will eventually be successful
 ```bash
