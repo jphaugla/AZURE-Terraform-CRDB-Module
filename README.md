@@ -21,6 +21,8 @@
       - [Install Azure CLI](#install-azure-cli)
       - [Azure Links](#azure-links)
     - [Terraform/Ansible Description](#terraformansible-documentation)
+    - [cdc-sink](#cdc-sink-replicator)
+      - [cdc-sink links](#cdc-sink-links)
 
 ![Resources Created in the Terraform HCL](resources/azure-single-regon.drawio.png)
 
@@ -171,10 +173,8 @@ az login (directs you to a browser login with a code -- once authenticated, your
 #### Azure Links:
 Microsoft Terraform Docs
 https://learn.microsoft.com/en-us/azure/virtual-machines/linux/quick-create-terraform
-
 Sizes for VM machines (not very helpful)
 https://learn.microsoft.com/en-us/azure/virtual-machines/sizes
-
 User Data that is a static SH 
 https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/master/linux-vm-main.tf
 
@@ -186,7 +186,7 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
   * [kafka node *kafka.tf*](kafka.tf)
   * [haproxy node *haproxy.tf*](haproxy.tf)
   * [cockroachDB node *instance.tf*](instance.tf)
-* Security groups with network permissions iin [network.tf](network.tf)
+* Network components including security groups with port permissions in [network.tf](network.tf)
 * Can use either of the regions subdirectories to kick off the deployment.  Both regions are defined to enable cdc-sink deployment
   * [region1](region1/main.tf) 
   * [region2](region2/main.tf)
@@ -198,7 +198,7 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
   * [playbook.yml](provisioners/playbook.yml) 
   * Each node group has a subdirectory under [provisioners/roles](provisioners/roles)
     * Each node group has ansible code to export the node's private and public ip addresses to a region subdirectory under [provisioners/temp](provisioners/temp)
-    * [haproxy-node](provisioners/roles/haproxy-node)  doesn't have any additional code
+    * [haproxy-node](provisioners/roles/haproxy-node)  doesn't have any additional installation
     * [app-node](provisioners/roles/app-node) creates an application node running cdc-sink and a Digital Banking java application
       * cdc-sink is [installed](provisioners/roles/app-node/tasks/install-cdc-sink.yml) and [started](provisioners/roles/app-node/tasks/create-cdc-sink.yml)
         * cdc-sink needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
@@ -208,16 +208,29 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
           * [make der certs](provisioners/roles/app-node/tasks/create-der-certs.yml)
           * [ensure git installed](provisioners/roles/app-node/tasks/install-git.yml) and [bank github cloned](provisioners/roles/app-node/tasks/add-githubs.yml)
     * [kafka-node](provisioners/roles/kafka-node)
+      * [confluent installed](provisioners/roles/kafka-node/tasks/confluent-install.yml)
+      * [confluent connect plug-ins](provisioners/roles/kafka-node/tasks/confluent-connect-plug.yml)
+      * [confluent start](provisioners/roles/kafka-node/tasks/confluent-start.yml)
+      * [confluent add connectors](provisioners/roles/kafka-node/tasks/confluent-add-connectors.yml)
     * [crdb-node](provisioners/roles/crdb-node)
       * For using cdc-sink, a changefeed script is [created](provisioners/roles/kafka-node/tasks/main.yml) using a [j2 template](provisioners/roles/crdb-node/templates/create-changefeed.j2)
-
   * Under each of these node groups
     * A vars/main.yml file has variable flags to enable/disable processing
     * A tasks/main.yml calls the required tasks to do the actual processing
     * A templates directory has j2 files allowing environment variable and other substitution
-* cdc-sink is also installed on the application node
-To tear it all down:
-NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command will eventually be successful
+## cdc-sink (replicator)
+![](resources/cdc-sink-components.png)
+This is a schematic of the cdc-sink deployment.  Within region, the nodes only use the private IPs to connect.  
+The only port needed to be opened between the regions is the port for cdc-sink running on the application node (30004).  The changefeed from 
+the other region will have this application nodes public IP address in its webhook address.
+### cdc-sink links
+* [cockroachDB create changefeed](https://www.cockroachlabs.com/docs/stable/create-changefeed)
+* [cdc-sink github](https://github.com/cockroachdb/cdc-sink)
+* [cdc-sink docker hub](https://hub.docker.com/r/cockroachdb/cdc-sink/tags)
+* [active-active Docker deployment](https://github.com/cockroachdb/cdc-sink/tree/master/scripts/active_active)
+
+## To tear it all down
+NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command is an option but sometime a force delete is needed on the OS disk drives of some nodes
 ```bash
 terraform destroy
 ```
