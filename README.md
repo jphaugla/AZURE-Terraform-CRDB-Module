@@ -51,11 +51,14 @@ export TF_VAR_cluster_organization={CLUSTER ORG}
 export TF_VAR_enterprise_license={LICENSE}
 ```
 #### Prepare
-* Use the terraform/ansible deployment using the subdirectories [region1](region1) and [region2](region2) in the deployment github
+* Use the terraform/ansible deployment using the subdirectories [region1](region1) and/or [region2](region2) in the deployment github
 * Can disable deployment of Kafka by setting the *include_ha_proxy* flag to "no" in [deploy main.tf](region1/main.tf)
 * Ensure *install_cdc_sink* flag and *create_cdc_sink* flag are set to true in [main.yml](provisioners/roles/app-node/vars/main.yml)
-* Ensure *install_enterprise_keys* is set in both [region1](region1) and [region2](region2)
-* Depending on needs, decide whether to deploy kafka using the *use
+* Ensure *install_enterprise_keys* is set in [main.tf](region1/main.tf)
+* Depending on needs, decide whether to deploy kafka setting the *include_kafka* to yes or no in [main.tf](region1/main.tf)
+* Look up the IP address of your client workstation and put that IP address in *my_ip_address*
+  * This allows your client workstation to access the nodes through their public IP address
+  * This access is needed for the ansible scripts to perform necessary operations
 * *NOTE:* Inside the application node, this [banking java application](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB) will be deployed and configured
 
 #### Kick off terraform script
@@ -141,7 +144,7 @@ exit
 vi changefeed.sh
 ./changefeed.sh
 ```
-Verify rows are flowing across from either region by running the [test application steps](#test-application)
+Verify rows are flowing across from either region by running additional [test application steps](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB/test-application)
 
 ## Technical Documentation
 
@@ -180,13 +183,13 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
 
 
 ### Terraform/Ansible Documentation
-* [terraform.tfvars](terraform.tfvars) and [vars.tf](vars.tf) has important parameters.  
+* [terraform.tfvars](terraform.tfvars) and [vars.tf](vars.tf) have important parameters.  
 * Each node type has its own tf file
   * [application node *app.tf*](app.tf)
   * [kafka node *kafka.tf*](kafka.tf)
   * [haproxy node *haproxy.tf*](haproxy.tf)
   * [cockroachDB node *instance.tf*](instance.tf)
-* Network components including security groups with port permissions in [network.tf](network.tf)
+* Network components including security groups with port permissions are in [network.tf](network.tf)
 * Can use either of the regions subdirectories to kick off the deployment.  Both regions are defined to enable cdc-sink deployment
   * [region1](region1/main.tf) 
   * [region2](region2/main.tf)

@@ -5,3 +5,4 @@ terraform.tfstate*
 .terraform*
 provisioners/temp
 provisioners/inventory
+.idea/
