@@ -37,7 +37,7 @@ resource "azurerm_network_security_rule" "desk-ssh" {
         protocol                   = "*"
         source_address_prefix      = "${var.my_ip_address}/32"
         source_port_range          = "*"
-        destination_port_ranges    = [22,26257,8080,8081,8082,8083,8088,9021,9092,9093,2181]
+        destination_port_ranges    = [22,26257,3000,8080,8081,8082,8083,8088,9021,9090,9092,9093,2181]
         destination_address_prefix = "*"
         resource_group_name        = local.resource_group_name
 	network_security_group_name = azurerm_network_security_group.sg.name

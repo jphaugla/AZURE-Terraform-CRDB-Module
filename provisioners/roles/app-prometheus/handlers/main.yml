@@ -1,0 +1,34 @@
+---
+- name: Restart prometheus
+  listen: "restart prometheus"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: prometheus
+    state: restarted
+  register: prometheus_restarted
+
+- name: Reload prometheus
+  listen: "reload prometheus"
+  become: true
+  ansible.builtin.systemd:
+    name: prometheus
+    state: reloaded
+  when: prometheus_restarted is not defined
+
+- name: Restart grafana-server
+  listen: "restart grafana-server"
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: grafana-server
+    state: restarted
+  register: grafana_server_restarted
+
+- name: Reload grafana-server
+  listen: "reload grafana-server"
+  become: true
+  ansible.builtin.systemd:
+    name: grafana-server
+    state: reloaded
+  when: grafana_server_restarted is not defined

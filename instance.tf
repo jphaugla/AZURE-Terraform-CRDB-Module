@@ -7,6 +7,8 @@ locals {
 locals {
   ip_list     = join(" ", azurerm_network_interface.crdb_network_interface[*].private_ip_address)
   join_string = (var.join_string != "" ? var.join_string : join(",", azurerm_network_interface.crdb_network_interface[*].private_ip_address))
+#   prometheus_string = (var.prometheus_string != "" ? var.prometheus_string : join(",", join("", azurerm_network_interface.crdb_network_interface[*].private_ip_address, [":8080"])))
+  prometheus_string = (var.prometheus_string != "" ? var.prometheus_string : join(",", formatlist("%s:8080", azurerm_network_interface.crdb_network_interface[*].private_ip_address)))
 }
 
 data "azurerm_ssh_public_key" "ssh_key" {

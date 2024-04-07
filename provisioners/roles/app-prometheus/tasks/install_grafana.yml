@@ -1,0 +1,36 @@
+- name: install grafana key
+  become: yes
+  shell:
+    cmd:  wget -qO gpg.key https://rpm.grafana.com/gpg.key
+
+- name: add repository
+  become: yes
+  shell:
+    cmd: rpm --import gpg.key
+  ignore_errors: yes
+
+- name: add grafana repo
+  become: yes
+  ansible.builtin.template:
+    src: grafana.repo.j2 
+    dest: /etc/yum.repos.d/grafana.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install the latest version of grafana
+  become: yes
+  ansible.builtin.dnf:
+    name: grafana
+    state: latest
+
+- name: Create systemd service unit for grafana
+  become: yes
+  ansible.builtin.template:
+    src: grafana.service.j2
+    dest: /etc/systemd/system/grafana-server.service
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart grafana-server

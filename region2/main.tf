@@ -14,7 +14,7 @@ module "azure" {
 # ----------------------------------------
 # My IP Address - security group config
 # ----------------------------------------
-   my_ip_address              = "174.141.204.193"
+   my_ip_address              = "12.252.7.226"
    
 # Azure Locations: "australiacentral,australiacentral2,australiaeast,australiasoutheast,brazilsouth,brazilsoutheast,brazilus,canadacentral,canadaeast,centralindia,centralus,centraluseuap,eastasia,eastus,eastus2,eastus2euap,francecentral,francesouth,germanynorth,germanywestcentral,israelcentral,italynorth,japaneast,japanwest,jioindiacentral,jioindiawest,koreacentral,koreasouth,malaysiasouth,northcentralus,northeurope,norwayeast,norwaywest,polandcentral,qatarcentral,southafricanorth,southafricawest,southcentralus,southeastasia,southindia,swedencentral,swedensouth,switzerlandnorth,switzerlandwest,uaecentral,uaenorth,uksouth,ukwest,westcentralus,westeurope,westindia,westus,westus2,westus3,austriaeast,chilecentral,eastusslv,israelnorthwest,malaysiawest,mexicocentral,newzealandnorth,southeastasiafoundational,spaincentral,taiwannorth,taiwannorthwest"
 # ----------------------------------------
@@ -53,7 +53,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "23.2.2"
+   crdb_version               = "23.2.3"
    
 # ----------------------------------------
 # Cluster Enterprise License Keys
@@ -73,6 +73,7 @@ module "azure" {
 # APP Instance Specifications
 # ----------------------------------------
    include_app                = "yes"
+   app_nodes                  = 1
    app_vm_size                = "Standard_B2ms"
    app_disk_size              = 64
    app_resize_homelv          = "no"  # if the app_disk_size is greater than 64, then set this to "yes" so that the disk will be resized.  See warnings in vars.tf!
@@ -80,7 +81,7 @@ module "azure" {
 # ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
-   include_kafka           = "yes"
+   include_kafka           = "no"
    kafka_vm_size            = "Standard_B4ms"
    
 # ----------------------------------------

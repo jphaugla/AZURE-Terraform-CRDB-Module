@@ -118,7 +118,7 @@
       default     = "m6i.large"
     }
     variable "crdb_nodes" {
-      description = "Number of crdb nodes.  This should be a multiple of 3.  Each node is an AWS Instance"
+      description = "Number of crdb nodes.  This should be a multiple of 3.  Each node is an Azure Instance"
       type        = number
       default     = 3
       validation {
@@ -175,6 +175,16 @@
 # ----------------------------------------
     variable "join_string" {
       description = "The CRDB join string to use at start-up.  Do not supply a value"
+      type        = string
+      default     = ""
+    }
+    variable "prometheus_string" {
+      description = "The CRDB prometheus string to use at start-up.  Do not supply a value"
+      type        = string
+      default     = ""
+    }
+    variable "prometheus_app_string" {
+      description = "The  prometheus cdc-sink string to use at start-up.  Do not supply a value"
       type        = string
       default     = ""
     }
@@ -279,6 +289,12 @@
         condition = contains(["yes", "no"], var.include_app)
         error_message = "Valid value for variable 'include_app' is : 'yes' or 'no'"        
       }
+    }
+
+    variable "app_nodes" {
+      description = "Number of app nodes.    Each node is an Azure Instance"
+      type        = number
+      default     = 1
     }
 
     variable "app_vm_size" {

@@ -1,38 +1,45 @@
+locals {
+  app_zones = ["1", "2", "3"]
+  prometheus_app_string = (var.prometheus_app_string != "" ? var.prometheus_app_string : join(",", formatlist("%s:30005", azurerm_network_interface.app[*].private_ip_address)))
+}
+
 resource "azurerm_public_ip" "app-ip" {
-    count                        = var.include_app == "yes" ? 1 : 0
-    name                         = "${var.owner}-${var.resource_name}-public-ip-app"
+    count                        = var.app_nodes
+    name                         = "${var.owner}-${var.resource_name}-public-ip-app-${count.index}"
     location                     = var.virtual_network_location
     resource_group_name          = local.resource_group_name
-    allocation_method            = "Dynamic"
-    sku                          = "Basic"
+    allocation_method            = "Static"
+    zones                        = [element(local.app_zones, count.index)]
+    sku                          = "Standard"
     tags                         = local.tags
 }
 
 resource "azurerm_network_interface" "app" {
-    count                       = var.include_app == "yes" ? 1 : 0
-    name                        = "${var.owner}-${var.resource_name}-ni-app"
+    count                       = var.app_nodes
+    name                        = "${var.owner}-${var.resource_name}-ni-app-${count.index}"
     location                    = var.virtual_network_location
     resource_group_name         = local.resource_group_name
     tags                        = local.tags
 
     ip_configuration {
-    name                          = "network-interface-app-ip"
-    subnet_id                     = azurerm_subnet.sn[0].id
+    name                          = "network-interface-app-ip-${count.index}"
+    subnet_id                     = azurerm_subnet.sn[count.index%3].id
     private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.app-ip[0].id
+    public_ip_address_id          = azurerm_public_ip.app-ip[count.index].id
     }
 }
 
 
 resource "azurerm_linux_virtual_machine" "app" {
-    count                 = var.include_app == "yes" && var.create_ec2_instances == "yes" ? 1 : 0
-    name                  = "${var.owner}-${var.resource_name}-vm-app"
+    count                 = var.include_app == "yes" ? var.app_nodes : 0
+    name                  = "${var.owner}-${var.resource_name}-vm-app-${count.index}"
     location              = var.virtual_network_location
     resource_group_name   = local.resource_group_name
     size                  = var.app_vm_size
+    zone		  = local.app_zones[count.index%3]
     tags                  = local.tags
 
-    network_interface_ids = [azurerm_network_interface.app[0].id]
+    network_interface_ids = [azurerm_network_interface.app[count.index].id]
 
     admin_username                  = local.admin_username     # is this still required with an admin_ssh key block?
     disable_password_authentication = true
@@ -54,7 +61,7 @@ resource "azurerm_linux_virtual_machine" "app" {
     #     storage_account_type = "Standard_LRS" # possible values: Standard_LRS, StandardSSD_LRS, Premium_LRS, Premium_SSD, StandardSSD_ZRS and Premium_ZRS
     # }
     os_disk {
-        name      = "${var.owner}-${var.resource_name}-app-osdisk"
+        name      = "${var.owner}-${var.resource_name}-app-osdisk-${count.index}"
         caching   = "ReadWrite" # possible values: None, ReadOnly and ReadWrite
         storage_account_type = "Standard_LRS" # possible values: Standard_LRS, StandardSSD_LRS, Premium_LRS, Premium_SSD, StandardSSD_ZRS and Premium_ZRS
         disk_size_gb = var.app_disk_size
