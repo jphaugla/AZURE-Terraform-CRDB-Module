@@ -1,0 +1,36 @@
+- name: change grafana admin password
+  become: yes
+  shell:
+    cmd: "grafana-cli admin reset-admin-password jasonrocks"
+
+- name: create prometheus datasource
+  community.grafana.grafana_datasource:
+    name: prometheus
+    ds_type: prometheus
+    ds_url: https://openshift-monitoring.company.com
+    access: proxy
+    url: http://localhost:9090
+    url_username: admin
+    url_password: jasonrocks
+    enforce_secure_data: true
+
+- name: Import Grafana dashboards for crdb
+  community.grafana.grafana_dashboard:
+    state: present
+    commit_message: Updated by ansible
+    overwrite: true
+    path: https://github.com/cockroachdb/cockroach/blob/master/monitoring/grafana-dashboards/by-cluster/changefeeds.json
+    url: http://localhost:9090
+    url_username: admin
+    url_password: jasonrocks
+
+- name: Import Grafana cdc-sink dashboard 
+  community.grafana.grafana_dashboard:
+    state: present
+    commit_message: Updated by ansible
+    overwrite: true
+    path: https://github.com/cockroachdb/cdc-sink/blob/master/scripts/dashboard/cdc-sink.json
+    url: http://localhost:9090
+    url_username: admin
+    url_password: jasonrocks
+

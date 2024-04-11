@@ -14,7 +14,7 @@ module "azure" {
 # ----------------------------------------
 # My IP Address - security group config
 # ----------------------------------------
-   my_ip_address              = "12.252.7.226"
+   my_ip_address              = "174.141.204.193"
    
 # Azure Locations: "australiacentral,australiacentral2,australiaeast,australiasoutheast,brazilsouth,brazilsoutheast,brazilus,canadacentral,canadaeast,centralindia,centralus,centraluseuap,eastasia,eastus,eastus2,eastus2euap,francecentral,francesouth,germanynorth,germanywestcentral,israelcentral,italynorth,japaneast,japanwest,jioindiacentral,jioindiawest,koreacentral,koreasouth,malaysiasouth,northcentralus,northeurope,norwayeast,norwaywest,polandcentral,qatarcentral,southafricanorth,southafricawest,southcentralus,southeastasia,southindia,swedencentral,swedensouth,switzerlandnorth,switzerlandwest,uaecentral,uaenorth,uksouth,ukwest,westcentralus,westeurope,westindia,westus,westus2,westus3,austriaeast,chilecentral,eastusslv,israelnorthwest,malaysiawest,mexicocentral,newzealandnorth,southeastasiafoundational,spaincentral,taiwannorth,taiwannorthwest"
 # ----------------------------------------
@@ -38,23 +38,26 @@ module "azure" {
 # ----------------------------------------
 # CRDB Instance Specifications
 # ----------------------------------------
-   crdb_vm_size               = "Standard_B2ms"
+#   this is very small node just for testing deployment
+#   crdb_vm_size               = "Standard_B2ms"
+#   this is a medium size  production node
+   crdb_vm_size               = "Standard_D8s_v5"
    crdb_disk_size             = 128
    crdb_resize_homelv         = "yes"
    crdb_nodes                 = 3
-   
+
 # ----------------------------------------
 # CRDB Admin User - Cert Connection
 # ----------------------------------------
    create_admin_user          = "yes"
    admin_user_name            = "jhaugland"
    admin_user_password        = "jasonrocks"
-   
+
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "23.2.3"
-   
+   crdb_version               = "23.2.4"
+
 # ----------------------------------------
 # Cluster Enterprise License Keys
 # ----------------------------------------
@@ -62,39 +65,45 @@ module "azure" {
 #   export TF_VAR_cluster_organization='your cluster organization'
 #   export TF_VAR_enterprise_license='your enterprise license'
    install_enterprise_keys   = "yes"
-   
+
 # ----------------------------------------
 # HA Proxy Instance Specifications
 # ----------------------------------------
    include_ha_proxy           = "yes"
-   haproxy_vm_size            = "Standard_B1ms"
-   
+#  very small size just to verify functionality
+#   haproxy_vm_size            = "Standard_B2ms"
+   haproxy_vm_size            = "Standard_D4s_v5"
+
 # ----------------------------------------
 # APP Instance Specifications
 # ----------------------------------------
    include_app                = "yes"
    app_nodes                  = 1
-   app_vm_size                = "Standard_B2ms"
+#   this is bare minimum for functionalizy
+#   app_vm_size                = "Standard_B2ms"
+   app_vm_size                = "Standard_D8s_v5"
    app_disk_size              = 64
    app_resize_homelv          = "no"  # if the app_disk_size is greater than 64, then set this to "yes" so that the disk will be resized.  See warnings in vars.tf!
-   
+
 # ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
    include_kafka           = "no"
-   kafka_vm_size            = "Standard_B4ms"
-   
+#   small size version
+#   kafka_vm_size            = "Standard_B4ms"
+   kafka_vm_size             = "Standard_D4s_v5"
+
 # ----------------------------------------
 # Cluster Location Data - For console map
 # ----------------------------------------
    install_system_location_data = "yes"
-   
+
 # ----------------------------------------
 # Ansible variables
 # ----------------------------------------
    instances_inventory_file = "inventory"
    ansible_verbosity_switch = ""
-   
+
 # ----------------------------------------
 # Image parameters for Kafka
 # ----------------------------------------

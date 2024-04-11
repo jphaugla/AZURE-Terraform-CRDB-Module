@@ -1,0 +1,2 @@
+add_certs: true
+install_cockroach_sql: true

@@ -28,7 +28,6 @@
 
 - name: save internal ip locally
   fetch:
-    dest: "temp/{{ region }}/"
     dest: "temp/{{ region }}/app_internal_ip{{ ip_int_node }}.txt"
     src: app_internal_ip.txt
     flat: yes

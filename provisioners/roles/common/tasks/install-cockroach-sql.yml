@@ -1,0 +1,31 @@
+- name: download binary 
+  shell:
+    cmd: "curl https://binaries.cockroachdb.com/cockroach-v{{crdb_version}}.linux-amd64.tgz | tar -xz" 
+    creates: "cockroach-v{{crdb_version}}.linux-amd64/cockroach"
+
+- name: install cockroach
+  become: yes
+  shell:
+    cmd: "cp -i cockroach-v{{crdb_version}}.linux-amd64/cockroach /usr/local/bin/"
+    creates: /usr/local/bin/cockroach
+
+- name: add geo libraries
+  become: yes
+  file:
+    path: /usr/local/lib/cockroach/
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: copy libgeos
+  become: yes
+  shell:
+    cmd: "cp -i cockroach-v{{crdb_version}}.linux-amd64/lib/libgeos.so  /usr/local/lib/cockroach/"
+    creates: /usr/local/lib/cockroach/libgeos.so
+
+- name: copy libgeos_c
+  become: yes
+  shell:
+    cmd: "cp -i cockroach-v{{crdb_version}}.linux-amd64/lib/libgeos_c.so  /usr/local/lib/cockroach/"
+    creates: /usr/local/lib/cockroach/libgeos_c.so

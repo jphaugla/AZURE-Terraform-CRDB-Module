@@ -58,3 +58,6 @@
   include_tasks: start-java-app.yml
   when:
     - start_java_app|bool
+
+- name: copy kv workload
+  include_tasks: copy-kv-workload.yml

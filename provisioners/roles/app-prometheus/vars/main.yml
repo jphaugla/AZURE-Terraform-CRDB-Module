@@ -14,3 +14,7 @@ _prometheus_selinux_packages: "{{ ['libselinux-python', 'policycoreutils-python'
                                ['python3-libselinux', 'python3-policycoreutils'] }}"
 _prometheus_repo: "prometheus/prometheus"
 _github_api_headers: "{{ {'GITHUB_TOKEN': lookup('ansible.builtin.env', 'GITHUB_TOKEN')} if (lookup('ansible.builtin.env', 'GITHUB_TOKEN')) else {} }}"
+preflight: true
+install_prometheus: true
+configure_prometheus: true
+install_grafana: true

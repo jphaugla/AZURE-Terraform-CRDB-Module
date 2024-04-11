@@ -85,25 +85,8 @@ then
   lvresize -r -L +$ds /dev/mapper/rootvg-homelv
 fi
 
-su ${local.admin_username} -c 'mkdir /home/${local.admin_username}/certs'
-echo '${local.tls_cert}' >> /home/${local.admin_username}/certs/ca.crt 
-chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/ca.crt
-chmod 600 /home/${local.admin_username}/certs/ca.crt
-echo '${local.tls_user_cert}' >> /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
-chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
-chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
-echo '${local.tls_user_key}' >> /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
-chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
-chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
-
-echo "Downloading and installing CockroachDB along with the Geo binaries"
-curl https://binaries.cockroachdb.com/cockroach-sql-v${var.crdb_version}.linux-amd64.tgz | tar -xz && cp -i cockroach-sql-v${var.crdb_version}.linux-amd64/cockroach-sql /usr/local/bin/
-
-echo "yum installing git"
-yum install git -y
-
 echo "CRDB() {" >> /home/${local.admin_username}/.bashrc
-echo 'cockroach-sql sql --url "postgresql://${var.admin_user_name}@'"${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert="'$HOME/certs/ca.crt&sslcert=$HOME/certs/client.'"${var.admin_user_name}.crt&sslkey="'$HOME/certs/client.'"${var.admin_user_name}.key"'"' >> /home/${local.admin_username}/.bashrc
+echo 'cockroach sql --url "postgresql://${var.admin_user_name}@'"${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert="'$HOME/certs/ca.crt&sslcert=$HOME/certs/client.'"${var.admin_user_name}.crt&sslkey="'$HOME/certs/client.'"${var.admin_user_name}.key"'"' >> /home/${local.admin_username}/.bashrc
 echo "}" >> /home/${local.admin_username}/.bashrc   
 echo " " >> /home/${local.admin_username}/.bashrc   
 
@@ -126,8 +109,8 @@ echo "echo 'ALTER DATABASE movr_demo SET PRIMARY REGION = "\""${var.virtual_netw
 echo "echo 'ALTER DATABASE movr_demo ADD REGION "\""${element(var.virtual_network_locations,1)}"\"";' >> crdb-multi-region-demo/sql/db_configure.sql" >> /home/${local.admin_username}/.bashrc
 echo "echo 'ALTER DATABASE movr_demo ADD REGION "\""${element(var.virtual_network_locations,2)}"\"";' >> crdb-multi-region-demo/sql/db_configure.sql" >> /home/${local.admin_username}/.bashrc
 echo "echo 'ALTER DATABASE movr_demo SURVIVE REGION FAILURE;' >> crdb-multi-region-demo/sql/db_configure.sql" >> /home/${local.admin_username}/.bashrc
-if [[ '${var.virtual_network_locations[0]}' == '${var.virtual_network_location}' ]]; then echo "cockroach-sql sql --url "\""postgres://${var.admin_user_name}@${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert=/home/${local.admin_username}/certs/ca.crt&sslcert=/home/${local.admin_username}/certs/client.${var.admin_user_name}.crt&sslkey=/home/${local.admin_username}/certs/client.${var.admin_user_name}.key"\"" --file crdb-multi-region-demo/sql/db_configure.sql" >> /home/${local.admin_username}/.bashrc; fi;
-if [[ '${var.virtual_network_locations[0]}' == '${var.virtual_network_location}' ]]; then echo "cockroach-sql sql --url "\""postgres://${var.admin_user_name}@${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert=/home/${local.admin_username}/certs/ca.crt&sslcert=/home/${local.admin_username}/certs/client.${var.admin_user_name}.crt&sslkey=/home/${local.admin_username}/certs/client.${var.admin_user_name}.key"\"" --file crdb-multi-region-demo/sql/import.sql" >> /home/${local.admin_username}/.bashrc; fi;
+if [[ '${var.virtual_network_locations[0]}' == '${var.virtual_network_location}' ]]; then echo "cockroach sql --url "\""postgres://${var.admin_user_name}@${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert=/home/${local.admin_username}/certs/ca.crt&sslcert=/home/${local.admin_username}/certs/client.${var.admin_user_name}.crt&sslkey=/home/${local.admin_username}/certs/client.${var.admin_user_name}.key"\"" --file crdb-multi-region-demo/sql/db_configure.sql" >> /home/${local.admin_username}/.bashrc; fi;
+if [[ '${var.virtual_network_locations[0]}' == '${var.virtual_network_location}' ]]; then echo "cockroach sql --url "\""postgres://${var.admin_user_name}@${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert=/home/${local.admin_username}/certs/ca.crt&sslcert=/home/${local.admin_username}/certs/client.${var.admin_user_name}.crt&sslkey=/home/${local.admin_username}/certs/client.${var.admin_user_name}.key"\"" --file crdb-multi-region-demo/sql/import.sql" >> /home/${local.admin_username}/.bashrc; fi;
 echo "}" >> /home/${local.admin_username}/.bashrc
 echo "# For demo usage.  The python code expects these environment variables to be set" >> /home/${local.admin_username}/.bashrc
 echo "export DB_HOST="\""${azurerm_network_interface.haproxy[0].private_ip_address}"\"" " >> /home/${local.admin_username}/.bashrc

@@ -14,10 +14,10 @@
   when:
     - get_tls|bool
 
-- name: install cockroach sql 
-  include_tasks: install-cockroach-sql.yml
-  when:
-    - install_cockroach_sql|bool
+# - name: install cockroach sql 
+#   include_tasks: install-cockroach-sql.yml
+#   when:
+#     - install_cockroach_sql|bool
 
 - name: confluent install
   include_tasks: confluent-install.yml

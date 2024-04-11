@@ -1,4 +1,14 @@
 ---
+# - name: install cockroach sql
+#   include_tasks: install-cockroach-sql.yml
+# #   when:
+#     - install_cockroach_sql|bool
+# 
+# - name: add the certs for jhaugland user
+#   include_tasks: add-certs.yml
+#   when:
+#     - add_certs|bool
+# 
 - name: Preflight
   ansible.builtin.include_tasks:
     file: preflight.yml
@@ -11,6 +21,8 @@
     - prometheus_configure
     - prometheus_install
     - prometheus_run
+  when:
+    - preflight|bool
 
 - name: Install
   ansible.builtin.include_tasks:
@@ -21,6 +33,8 @@
         - prometheus_install
   tags:
     - prometheus_install
+  when:
+    - install_prometheus|bool
 
 - name: Configure
   ansible.builtin.include_tasks:
@@ -31,6 +45,8 @@
         - prometheus_configure
   tags:
     - prometheus_configure
+  when:
+    - configure_prometheus|bool
 
 - name: Ensure prometheus service is started and enabled
   become: true
@@ -45,6 +61,8 @@
 - name: grafana install
   ansible.builtin.include_tasks:
     file: install_grafana.yml
+  when:
+    - install_grafana|bool
 
 - name: Ensure grafana service is started and enabled
   become: true
@@ -55,3 +73,7 @@
     enabled: true
   tags:
     - grafana_run
+
+# - name: grafana configure
+#   ansible.builtin.include_tasks:
+#     file: configure_grafana.yml

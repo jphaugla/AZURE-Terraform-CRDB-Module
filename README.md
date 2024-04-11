@@ -67,6 +67,7 @@ modify [main.tf](region1/main.tf)
 cd region1
 terraform init
 terraform plan
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 terraform apply
 ```
 
@@ -85,9 +86,11 @@ export TF_VAR_enterprise_license={LICENSE}
 git clone https://github.com/nollenr/AZURE-Terraform-CRDB-Module.git
 cd AZURE-Terraform-CRDB-Module/region1
 terraform init
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 terraform apply
 cd AZURE-Terraform-CRDB-Module/region2
 terraform init
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 terraform apply
 ```
 ### Verify deployment

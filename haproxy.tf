@@ -102,6 +102,16 @@ counter=1;for IP in $CLUSTER_PRIVATE_IP_LIST; do echo "    server cockroach$coun
 chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/haproxy.cfg
 echo "Installing HAProxy"; yum -y install haproxy
 echo "Starting HAProxy as ${local.admin_username}"; su ${local.admin_username} -lc 'haproxy -f haproxy.cfg > haproxy.log 2>&1 &'
+su ${local.admin_username} -c 'mkdir /home/${local.admin_username}/certs'
+echo '${local.tls_cert}' >> /home/${local.admin_username}/certs/ca.crt
+chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/ca.crt
+chmod 600 /home/${local.admin_username}/certs/ca.crt
+echo '${local.tls_user_cert}' >> /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
+chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
+chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
+echo '${local.tls_user_key}' >> /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
+chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
+chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
   EOF
   )
 }

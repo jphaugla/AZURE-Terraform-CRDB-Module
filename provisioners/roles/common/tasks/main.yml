@@ -1,0 +1,9 @@
+- name: install cockroach sql 
+  include_tasks: install-cockroach-sql.yml
+  when:
+    - install_cockroach_sql|bool
+
+- name: add-certs
+  include_tasks: add-certs.yml
+  when:
+    - add_certs|bool

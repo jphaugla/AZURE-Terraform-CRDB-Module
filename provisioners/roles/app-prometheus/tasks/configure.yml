@@ -73,10 +73,13 @@
     owner: root
     group: "{{ prometheus_system_group }}"
     mode: 0640
-    validate: "{{ _prometheus_binary_install_dir }}/promtool check config %s"
-  no_log: "{{ false if (lookup('env', 'CI')) or (lookup('env', 'MOLECULE_PROVISIONER_NAME')) else true }}"
-  notify:
-    - reload prometheus
+
+# - name validate prometheus file
+#   ansible.utils.validate: 
+#     data: "{{ _prometheus_binary_install_dir }}/promtool check config {{ prometheus_config_dir }}/prometheus.yml"
+#     criteria: "{{ false if (lookup('env', 'CI')) or (lookup('env', 'MOLECULE_PROVISIONER_NAME')) else true }}"
+#   notify:
+#     - reload prometheus
 
 - name: Configure Prometheus web
   ansible.builtin.copy:

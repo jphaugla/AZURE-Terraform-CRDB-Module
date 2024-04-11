@@ -14,6 +14,10 @@ resource "local_file" "instances_file" {
             haproxy_private_ip = "${azurerm_linux_virtual_machine.haproxy.0.private_ip_address}"
             app_public_ip = "${azurerm_linux_virtual_machine.app.0.public_ip_address}"
             app_private_ip = "${azurerm_linux_virtual_machine.app.0.private_ip_address}"
+            app_private_ips = "${join("\n", azurerm_linux_virtual_machine.app[*].private_ip_address)}"
+            app_public_ips = "${join("\n", azurerm_linux_virtual_machine.app[*].public_ip_address)}"
+            all_private_ips = format("%s\n%s\n%s\n%s",  "${join("\n", azurerm_network_interface.crdb_network_interface[*].private_ip_address)}", length(azurerm_linux_virtual_machine.kafka) > 0 ? "${azurerm_linux_virtual_machine.kafka.0.private_ip_address}" : "null", "${azurerm_linux_virtual_machine.haproxy.0.private_ip_address}",  "${join("\n", azurerm_network_interface.app[*].private_ip_address)}")
+            all_public_ips = format("%s\n%s\n%s\n%s",  "${join("\n", (azurerm_public_ip.crdb-ip.*.ip_address) )}",  length(azurerm_linux_virtual_machine.kafka) > 0 ? "${azurerm_linux_virtual_machine.kafka.0.public_ip_address}" : "null", "${azurerm_linux_virtual_machine.haproxy.0.public_ip_address}",  "${join("\n", azurerm_linux_virtual_machine.app[*].public_ip_address)}")
             ssh_user = "${local.admin_username}"
             cluster_size = "${var.crdb_nodes}"
         })

@@ -1,0 +1,29 @@
+- name: make certs dir
+  become: yes
+  file:
+    path: /home/adminuser/certs
+    state: directory
+    mode: '0755'
+    owner: adminuser
+    group: adminuser
+    recurse: yes
+
+
+- name: create ca.crt
+  copy:
+    src: "./temp/{{region}}/tls_cert"
+    dest: /home/adminuser/certs/ca.crt
+    mode: '0400'
+
+- name: create client.jhaugland.crt
+  copy:
+    src: "./temp/{{region}}/tls_user_cert"
+    dest: "/home/adminuser/certs/client.{{db_admin_user}}.crt"
+    mode: '0400'
+
+- name: create client.jhaugland.key
+  copy:
+    src: "./temp/{{region}}/tls_user_key"
+    dest: "/home/adminuser/certs/client.{{db_admin_user}}.key"
+    mode: '0400'
+
