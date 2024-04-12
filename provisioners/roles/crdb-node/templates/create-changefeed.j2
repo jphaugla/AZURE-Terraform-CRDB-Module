@@ -1,2 +1,0 @@
-# must change the host IP addressto the app node external address on the destination region
-cockroach sql --host=localhost --certs-dir=certs --execute "CREATE CHANGEFEED FOR TABLE defaultdb.account, defaultdb.customer, defaultdb.dispute,defaultdb.email,defaultdb.merchant,defaultdb.phone,defaultdb.transaction,defaultdb.transaction_return INTO 'webhook-https://52.242.82.6:30004/defaultdb/public?insecure_tls_skip_verify=true' WITH diff, updated, resolved='5s';"

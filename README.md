@@ -41,7 +41,7 @@ To use the HCL, you will need to define an Azure SSH Key -- that will be used fo
 ```terraform
 # See the appendix below to intall Terrafrom, the Azure CLI and logging in to Azure
 
-git clone https://github.com/nollenr/AZURE-Terraform-CRDB-Module.git
+git clone https://github.com/jphaugla/AZURE-Terraform-CRDB-Module.git
 cd AZURE-Terraform-CRDB-Module/
 ```
 
@@ -67,7 +67,6 @@ modify [main.tf](region1/main.tf)
 cd region1
 terraform init
 terraform plan
-export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 terraform apply
 ```
 
@@ -83,14 +82,12 @@ terraform destroy
 ```bash
 export TF_VAR_cluster_organization={CLUSTER ORG}
 export TF_VAR_enterprise_license={LICENSE}
-git clone https://github.com/nollenr/AZURE-Terraform-CRDB-Module.git
+git clone https://github.com/jphaugla/AZURE-Terraform-CRDB-Module.git
 cd AZURE-Terraform-CRDB-Module/region1
 terraform init
-export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 terraform apply
 cd AZURE-Terraform-CRDB-Module/region2
 terraform init
-export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
 terraform apply
 ```
 ### Verify deployment

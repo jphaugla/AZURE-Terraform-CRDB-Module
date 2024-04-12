@@ -1,0 +1,23 @@
+- name: save changefeed shell script
+  copy:
+    src: create-changefeed.sh
+    dest: create-changefeed.sh
+    mode: '0755'
+
+- name: save changefeed shell script
+  copy:
+    src: create-changefeed-kv.sh
+    dest: create-changefeed-kv.sh
+    mode: '0755'
+
+- name: save changefeed shell script
+  copy:
+    src: create-changefeed.sql
+    dest: create-changefeed.sql
+    mode: '0755'
+
+- name: save changefeed shell script
+  copy:
+    src: create-changefeed-kv.sql
+    dest: create-changefeed-kv.sql
+    mode: '0755'

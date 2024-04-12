@@ -1,3 +1,4 @@
 save_ips: true
 # no longer needed- leave false
 get_crdb_tls: false
+changefeed: true
