@@ -13,3 +13,4 @@ add_password: true
 create_der_certs: true
 create_cdc_sink: true
 start_java_app: true
+create_kv: true

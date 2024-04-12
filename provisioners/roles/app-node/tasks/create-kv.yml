@@ -1,0 +1,16 @@
+- name: create kv database
+  command: "{{ lookup('template','create-kv-db.j2') }}"
+
+- name: create dead letter queue
+  command: "{{ lookup('template','dead-letter-kv.j2') }}"
+
+- name: create kv table
+  command: "{{ lookup('template','create-kv-table.j2') }}"
+
+- name: copy kv-workload script
+  ansible.builtin.template:
+    src: kv-workload.j2
+    dest: kv-workload.sh
+    owner: adminuser
+    group: adminuser
+    mode: '0755'

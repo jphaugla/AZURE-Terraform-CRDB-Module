@@ -59,5 +59,7 @@
   when:
     - start_java_app|bool
 
-- name: copy kv workload
-  include_tasks: copy-kv-workload.yml
+- name: create kv workload
+  include_tasks: create-kv.yml
+  when:
+    - create_kv|bool
