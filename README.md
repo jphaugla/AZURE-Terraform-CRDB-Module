@@ -79,7 +79,7 @@ terraform apply
 Generic grafana prometheus plugin and grafana dashboard
 [configure prometheus data source for grafana](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure-prometheus-data-source/)
 [import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
-Detailed steps are documented in the following grafana links for cockroachDB and cdc-sink/replicator.  
+Detailed steps are documented in the following grafana links for cockroachDB and cdc-sink/replicator.
 * [CockroachDB Grafana dashboards](https://www.cockroachlabs.com/docs/stable/monitor-cockroachdb-with-prometheus#step-5-visualize-metrics-in-grafana)
 * [cdc-sink/replicator](https://github.com/cockroachdb/cdc-sink/wiki/Monitoring)
 #### Specific steps for github
@@ -87,6 +87,7 @@ Prometheus and Grafana are configured and started by the ansible scripts.  Both 
 * Look up the haproxy node address in the region subdirectory under [provisioners/temp](provisioners/temp)
 * Start the grafana interface using [grafana ui](localhost:3000).  
   * This grafana ui is the haproxy external node ip at port 3000
+* Change the admin login password (original login is the installation default of admin/admin)
 * [configure prometheus data source for grafana](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure-prometheus-data-source/)
   * really this is:
     * adding the prometheus data source as documented in the link above
@@ -95,8 +96,9 @@ Prometheus and Grafana are configured and started by the ansible scripts.  Both 
     * Click save and test
 * [import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
   * CockroachDB and cdc-sink/terminator grafana dashboards are available within [grafana dashboards folder](scripts/grafana_dashboards)
-    * Of course, these could be stale.  Refresh this folder using the [importGrafanaDashboards.sh](scripts/getGrafanaDashboards.sh)
+    * These could be stale.  Refresh this folder using the [importGrafanaDashboards.sh](scripts/getGrafanaDashboards.sh)
     * import all the dashboards.  One of them is for cdc-sink/terminator and the rest are cockroachDB dashboards
+    * *NOTE:* [cdc-sink.json](scripts/grafana_dashboards/cdc-sink.json) is only needed if doing cdc-sink/terminator  
     
 ### clean up and remove everything that was created
 
@@ -154,25 +156,40 @@ java -jar target/cockroach-0.0.1-SNAPSHOT.jar
 ### Deploy changefeeds
 * The necessary manual step is to deploy a [CockroachDB Changefeed](https://www.cockroachlabs.com/docs/stable/create-changefeed) across the regions to make active/active cdc-sink between the two otherwise independent regions
   * Port 30004 is open on both regions to allow the changefeed to communicate with the application server on the other region
-* Start the changefeed on each side with changfeed pointing to the other sids's application external IP address
+* Start the changefeed on each side with changefeed pointing to the other sids's application node external IP address
 * The changefeed script is written on each of the cockroach database nodes by the terraform script.  Login to any of the cockroach
   nodes using the IP address in [temp](provisioners/temp) for each deployed region.
   * As previously mentioned, the changefeed script must be modified to point to the application external IP address for the other region
   * this is the step that reaches across to the other region as everything else is within region boundaries
 * IMPORTANT NOTE:  Must have enterprise license for the changefeed to be enabled
   * see [changefeed documentation](https://www.cockroachlabs.com/docs/stable/licensing-faqs#set-a-license)
+* Two different changefeeds are provided in the home directory for the adminuser on any of the cockroachDB nodes:  Banking application or cockroach kv workload
+  * In either case, edit the corresponding sql script using the external IP address for other regions application node  
+  * Banking application
+    * edit create-changefeed.sql replacing the IP address before port number 30004, with the external IP address for other regions application node
+    * create-changefeed.sh-creates a changefeed for the banking application
+  * Cockraoch kv workload
+    * edit create-changefeed-kv.sql replacing the IP address before port number 30004, with the external IP address for other regions application node
+    * create-changefeed-kv.sh-creates a changefeed for the [cockroachdb kv workload](https://www.cockroachlabs.com/docs/stable/cockroach-workload)
 ```bash
 cd ~/AZURE-Terraform-CRDB-Module/provisioners/temp/{region_name}
 ssh -i path_to_ssh_file adminuser@`cat crdb_external_ip{any ip_address}`
 # edit create-changefeed.sh putting the app node external IP address for the other region
-cockroach sql --host=localhost --certs-dir=certs
+cockroach sql --certs-dir=certs
 SET CLUSTER SETTING cluster.organization = 'Acme Company';
 SET CLUSTER SETTING enterprise.license = 'xxxxxxxxxxxx';
 exit
-vi changefeed.sh
-./changefeed.sh
+# two different changefeed scripts are provided
+vi create-changefeed-kv.sql
+# or 
+vi create-changefeed.sql
+./create-changefeed-kv.sh
+ # or 
+ ./create-changefeed.sh
 ```
-Verify rows are flowing across from either region by running additional [test application steps](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB/test-application)
+Verify rows are flowing across from either region by running additional [test application steps](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB/test-application) 
+or run sample kv workload from the adminuser home in the application node application machine using the provided *kv-workload.sh* script
+
 
 ## Technical Documentation
 
