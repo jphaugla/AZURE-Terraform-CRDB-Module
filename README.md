@@ -13,6 +13,9 @@
       - [Ensure cdc-sink running](#ensure-cdc-sink-is-running-on-each-region)
       - [Verify application running in each region](#verify-application-running-in-each-region)
     - [Deploy ChangeFeeds](#deploy-changefeeds)
+    - [Add Grafana dashboards](#add-grafana-dashboards)
+      - [Background and Links](#background-and-links)
+      - [Specific Steps for Dashboards](#specific-steps-for-github)
   - [Technical Documentation](#technical-documentation)
     - [Azure Documentation](#azure-documentation)
       - [resize disk](#terraform-variable-crdbresizehomelv)
@@ -20,6 +23,8 @@
       - [Install Terraform](#install-terraform) 
       - [Install Azure CLI](#install-azure-cli)
       - [Azure Links](#azure-links)
+    - [CockroachDB Links](#cockroachdb-links)
+    - [Other Links](#general-links)
     - [Terraform/Ansible Description](#terraformansible-documentation)
     - [cdc-sink](#cdc-sink-replicator)
       - [cdc-sink links](#cdc-sink-links)
@@ -69,8 +74,31 @@ terraform init
 terraform plan
 terraform apply
 ```
-
-To clean up and remove everything that was created
+### Add Grafana Dashboards
+#### Background and Links
+Generic grafana prometheus plugin and grafana dashboard
+[configure prometheus data source for grafana](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure-prometheus-data-source/)
+[import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
+Detailed steps are documented in the following grafana links for cockroachDB and cdc-sink/replicator.  
+* [CockroachDB Grafana dashboards](https://www.cockroachlabs.com/docs/stable/monitor-cockroachdb-with-prometheus#step-5-visualize-metrics-in-grafana)
+* [cdc-sink/replicator](https://github.com/cockroachdb/cdc-sink/wiki/Monitoring)
+#### Specific steps for github
+Prometheus and Grafana are configured and started by the ansible scripts.  Both are running as services on the haproxy node
+* Look up the haproxy node address in the region subdirectory under [provisioners/temp](provisioners/temp)
+* Start the grafana interface using [grafana ui](localhost:3000).  
+  * This grafana ui is the haproxy external node ip at port 3000
+* [configure prometheus data source for grafana](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure-prometheus-data-source/)
+  * really this is:
+    * adding the prometheus data source as documented in the link above
+    * entering *http://localhost:9090* for the connection URL
+    * scrolling to the bottom of the UI window
+    * Click save and test
+* [import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
+  * CockroachDB and cdc-sink/terminator grafana dashboards are available within [grafana dashboards folder](scripts/grafana_dashboards)
+    * Of course, these could be stale.  Refresh this folder using the [importGrafanaDashboards.sh](scripts/getGrafanaDashboards.sh)
+    * import all the dashboards.  One of them is for cdc-sink/terminator and the rest are cockroachDB dashboards
+    
+### clean up and remove everything that was created
 
 ```
 terraform destroy
@@ -181,6 +209,12 @@ https://learn.microsoft.com/en-us/azure/virtual-machines/sizes
 User Data that is a static SH 
 https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/master/linux-vm-main.tf
 
+#### CockroachDB Links
+* [CockroachDB Grafana dashboards](https://www.cockroachlabs.com/docs/stable/monitor-cockroachdb-with-prometheus#step-5-visualize-metrics-in-grafana)
+
+#### General Links
+[configure prometheus data source for grafana](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure-prometheus-data-source/)
+[import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
 
 ### Terraform/Ansible Documentation
 * [terraform.tfvars](terraform.tfvars) and [vars.tf](vars.tf) have important parameters.  
@@ -231,6 +265,7 @@ the other region will have this application nodes public IP address in its webho
 * [cdc-sink github](https://github.com/cockroachdb/cdc-sink)
 * [cdc-sink docker hub](https://hub.docker.com/r/cockroachdb/cdc-sink/tags)
 * [active-active Docker deployment](https://github.com/cockroachdb/cdc-sink/tree/master/scripts/active_active)
+* [cdc-sink/replicator grafana dashboards](https://github.com/cockroachdb/cdc-sink/wiki/Monitoring)
 
 ## To tear it all down
 NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command is an option but sometime a force delete is needed on the OS disk drives of some nodes
