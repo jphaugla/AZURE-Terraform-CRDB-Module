@@ -26,40 +26,17 @@
   when:
     - package_java_app|bool
 
-- name: install cdc_sink
-  include_tasks: install-cdc-sink.yml
-  when:
-    - install_cdc_sink|bool
-
 - name: install nodejs and typescript
   include_tasks: install-nodejs-typescript.yml
   when:
     - install_nodejs_typescript|bool
-
-# this password is no longer needed for the application but
-# still needed for kafka
-- name: add password to cockroach admin role
-  include_tasks: add-password.yml
-  when:
-    - add_password|bool
 
 - name: create der certs
   include_tasks: create-der-certs.yml
   when:
     - create_der_certs|bool
 
-- name: create cdc-sink
-  include_tasks: create-cdc-sink.yml
-  when:
-    - create_cdc_sink|bool
-
-
 - name: start java application
   include_tasks: start-java-app.yml
   when:
     - start_java_app|bool
-
-- name: create kv workload
-  include_tasks: create-kv.yml
-  when:
-    - create_kv|bool

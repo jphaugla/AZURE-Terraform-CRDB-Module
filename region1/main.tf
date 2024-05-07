@@ -78,6 +78,7 @@ module "azure" {
 # APP Instance Specifications
 # ----------------------------------------
    include_app                = "yes"
+   include_cdc_sink           = "no"
    app_nodes                  = 1
 #   this is bare minimum for functionalizy
 #   app_vm_size                = "Standard_B2ms"

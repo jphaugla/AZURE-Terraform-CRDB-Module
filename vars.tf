@@ -291,6 +291,16 @@
       }
     }
 
+    variable "include_cdc_sink" {
+      description = "'yes' or 'no' to include cdc-sink application"
+      type        = string
+      default     = "yes"
+      validation {
+        condition = contains(["yes", "no"], var.include_cdc_sink)
+        error_message = "Valid value for variable 'include_cdc_sink' is : 'yes' or 'no'"        
+      }
+    }
+
     variable "app_nodes" {
       description = "Number of app nodes.    Each node is an Azure Instance"
       type        = number

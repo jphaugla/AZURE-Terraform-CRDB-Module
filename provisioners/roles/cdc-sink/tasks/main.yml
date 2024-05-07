@@ -1,0 +1,17 @@
+- meta: end_play
+  when: include_cdc_sink != "yes"
+
+- name: install cdc_sink
+  include_tasks: install-cdc-sink.yml
+  when:
+    - install_cdc_sink|bool
+
+- name: create cdc-sink
+  include_tasks: create-cdc-sink.yml
+  when:
+    - create_cdc_sink|bool
+
+- name: create kv workload
+  include_tasks: create-kv.yml
+  when:
+    - create_kv|bool

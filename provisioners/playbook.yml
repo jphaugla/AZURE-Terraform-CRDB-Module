@@ -10,10 +10,18 @@
   gather_facts: True
   roles:
     - crdb-node
+- hosts: crdb_node_ips_0
+  gather_facts: True
+  roles:
+    - crdb-node-0
 - hosts: app_node_ips
   gather_facts: True
   roles:
     - app-node
+- hosts: app_node_ips
+  gather_facts: True
+  roles:
+    - cdc-sink
 - hosts: haproxy_node_ips
   gather_facts: True
   roles:

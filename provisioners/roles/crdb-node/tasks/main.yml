@@ -3,10 +3,15 @@
   when:
     - save_ips|bool
 
-- name: save root crt keys
-  include_tasks: get-crdb-tls.yml
+- name: generate certificates needed for crdb
+  include_tasks: gen-certs.yml
   when:
-    - get_crdb_tls|bool
+    - gen_certs|bool
+
+- name: start crdb on this node
+  include_tasks: start-crdb.yml
+  when:
+    - start_crdb|bool
 
 - name: save external and internal ip addresses
   include_tasks: changefeed.yml

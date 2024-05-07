@@ -1,0 +1,8 @@
+- name: generate node certs
+  shell:
+    cmd: "cockroach cert create-node {{ inventory_hostname }} {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} localhost {{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}} --certs-dir=certs --ca-key=my-safe-directory/ca.key"
+    creates: certs/node.crt
+- name: generate client certs
+  shell:
+    cmd: "cockroach cert create-client root --certs-dir=certs --ca-key=my-safe-directory/ca.key"
+    creates: certs/client.root.key

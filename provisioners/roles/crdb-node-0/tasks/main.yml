@@ -1,0 +1,24 @@
+- name: init crdb
+  shell:
+    cmd: "cockroach init --certs-dir=certs" 
+  ignore_errors: true
+
+- name: copy systems location sql script
+  copy:
+    src: system_locations.sql
+    dest: system_locations.sql    
+
+- name: copy create user sql script
+  copy:
+    src: create_user.sql
+    dest: create_user.sql    
+
+#  ignore errors because of retry.  
+- name: install system locations
+  shell:
+    cmd: "cockroach sql --certs-dir=certs --file=system_locations.sql"
+  ignore_errors: true
+
+- name: create admin user
+  shell:
+    cmd: "cockroach sql --certs-dir=certs --file=create_user.sql"

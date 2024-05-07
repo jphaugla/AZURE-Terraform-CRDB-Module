@@ -253,14 +253,15 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
   * Each node group has a subdirectory under [provisioners/roles](provisioners/roles)
     * Each node group has ansible code to export the node's private and public ip addresses to a region subdirectory under [provisioners/temp](provisioners/temp)
     * [haproxy-node](provisioners/roles/haproxy-node)  doesn't have any additional installation
-    * [app-node](provisioners/roles/app-node) creates an application node running cdc-sink and a Digital Banking java application
-      * cdc-sink is [installed](provisioners/roles/app-node/tasks/install-cdc-sink.yml) and [started](provisioners/roles/app-node/tasks/create-cdc-sink.yml)
-        * cdc-sink needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
+    * [app-node](provisioners/roles/app-node) creates an application node running cdc-sink and a Digital Banking java application 
       * banking java application is [installed](provisioners/roles/app-node/tasks/package-java-app.yml) and [started](provisioners/roles/app-node/tasks/start-java-app.yml)
         * banking java application needs these tasks to run as well:
           * [java installed](provisioners/roles/app-node/tasks/install-java-maven-go.yml)
           * [make der certs](provisioners/roles/app-node/tasks/create-der-certs.yml)
           * [ensure git installed](provisioners/roles/app-node/tasks/install-git.yml) and [bank github cloned](provisioners/roles/app-node/tasks/add-githubs.yml)
+    * [cdc-sink](provisioners/roles/cdc-sink) creates cdc-sink/replicator deployment
+      * cdc-sink is [installed](provisioners/roles/app-node/tasks/install-cdc-sink.yml) and [started](provisioners/roles/app-node/tasks/create-cdc-sink.yml)
+      * cdc-sink needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
     * [kafka-node](provisioners/roles/kafka-node)
       * [confluent installed](provisioners/roles/kafka-node/tasks/confluent-install.yml)
       * [confluent connect plug-ins](provisioners/roles/kafka-node/tasks/confluent-connect-plug.yml)

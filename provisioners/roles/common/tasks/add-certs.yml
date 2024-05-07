@@ -6,8 +6,15 @@
     mode: '0755'
     owner: adminuser
     group: adminuser
-    recurse: yes
 
+- name: make my-safe-directory dir
+  become: yes
+  file:
+    path: /home/adminuser/my-safe-directory
+    state: directory
+    mode: '0755'
+    owner: adminuser
+    group: adminuser
 
 - name: create ca.crt
   copy:
@@ -27,3 +34,25 @@
     dest: "/home/adminuser/certs/client.{{db_admin_user}}.key"
     mode: '0400'
 
+- name: create ca.pub
+  copy:
+    src: "./temp/{{region}}/tls_public_key"
+    dest: /home/adminuser/certs/ca.pub
+    mode: '0400'
+
+- name: create ca.key
+  copy:
+    src: "./temp/{{region}}/tls_private_key"
+    dest: /home/adminuser/my-safe-directory/ca.key
+    mode: '0400'
+
+- name: copy keys for passwordless ssh between nodes
+  copy:
+    dest: /home/adminuser/.ssh/id_rsa 
+    src: /home/adminuser/my-safe-directory/ca.key
+    remote_src: yes
+    mode: '0400'
+
+- name: add to authorized keys
+  shell:
+    cmd: "ssh-keygen -y -f /home/adminuser/.ssh/id_rsa >> /home/adminuser/.ssh/authorized_keys"
