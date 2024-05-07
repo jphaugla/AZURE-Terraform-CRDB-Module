@@ -40,3 +40,11 @@
   include_tasks: start-java-app.yml
   when:
     - start_java_app|bool
+
+- name: copy kv-workload script
+  ansible.builtin.template:
+    src: kv-workload.j2
+    dest: kv-workload.sh
+    owner: adminuser
+    group: adminuser
+    mode: '0755'

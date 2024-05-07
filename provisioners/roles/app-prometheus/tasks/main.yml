@@ -1,14 +1,4 @@
 ---
-# - name: install cockroach sql
-#   include_tasks: install-cockroach-sql.yml
-# #   when:
-#     - install_cockroach_sql|bool
-# 
-# - name: add the certs for jhaugland user
-#   include_tasks: add-certs.yml
-#   when:
-#     - add_certs|bool
-# 
 - name: Preflight
   ansible.builtin.include_tasks:
     file: preflight.yml

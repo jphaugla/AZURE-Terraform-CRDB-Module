@@ -219,14 +219,23 @@
   # Be sure to do the following in your environment if you plan on installing the license keys
   #   export TF_VAR_cluster_organization='your cluster organization'
   #   export TF_VAR_enterprise_license='your enterprise license'
-  variable "cluster_organization" { 
-    type = string  
-    default = "" 
-  }
-  variable "enterprise_license"   { 
-    type = string  
-    default = "" 
-  }
+#   variable "cluster_organization" { 
+#     type = string  
+#     default = "" 
+#   }
+#   variable "enterprise_license"   { 
+#     type = string  
+#     default = "" 
+#  }
+# 
+#   resource "local_file" "write_license" {
+#    filename = "../provisioners/temp/${var.virtual_network_location}/enterprise_license"
+#    content = var.enterprise_license
+#   }
+#   resource "local_file" "write_cluster_org" {
+#    filename = "../provisioners/temp/${var.virtual_network_location}/cluster_organization"
+#    content = var.cluster_organization
+#   }
 # ----------------------------------------
 # Cluster Location Data - For console map
 # ----------------------------------------

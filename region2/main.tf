@@ -62,8 +62,9 @@ module "azure" {
 # Cluster Enterprise License Keys
 # ----------------------------------------
 # Be sure to do the following in your environment if you plan on installing the license keys
-#   export TF_VAR_cluster_organization='your cluster organization'
-#   export TF_VAR_enterprise_license='your enterprise license'
+# must add the enterprise licence and the cluster organization to the following subdirectory
+#  ../provisioners/temp/<region>/enterprise_licence
+#  ../provisioners/temp/<region>/cluster_organization
    install_enterprise_keys   = "yes"
 
 # ----------------------------------------

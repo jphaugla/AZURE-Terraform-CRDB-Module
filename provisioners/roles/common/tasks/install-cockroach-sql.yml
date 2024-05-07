@@ -2,12 +2,14 @@
   shell:
     cmd: "curl https://binaries.cockroachdb.com/cockroach-v{{crdb_version}}.linux-amd64.tgz | tar -xz" 
     creates: "cockroach-v{{crdb_version}}.linux-amd64/cockroach"
+    chdir: /tmp
 
 - name: install cockroach
   become: yes
   shell:
     cmd: "cp -i cockroach-v{{crdb_version}}.linux-amd64/cockroach /usr/local/bin/"
     creates: /usr/local/bin/cockroach
+    chdir: /tmp
 
 - name: add geo libraries
   become: yes
@@ -21,11 +23,13 @@
 - name: copy libgeos
   become: yes
   shell:
+    chdir: /tmp
     cmd: "cp -i cockroach-v{{crdb_version}}.linux-amd64/lib/libgeos.so  /usr/local/lib/cockroach/"
     creates: /usr/local/lib/cockroach/libgeos.so
 
 - name: copy libgeos_c
   become: yes
   shell:
+    chdir: /tmp
     cmd: "cp -i cockroach-v{{crdb_version}}.linux-amd64/lib/libgeos_c.so  /usr/local/lib/cockroach/"
     creates: /usr/local/lib/cockroach/libgeos_c.so

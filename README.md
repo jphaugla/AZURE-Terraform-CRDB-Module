@@ -52,8 +52,9 @@ cd AZURE-Terraform-CRDB-Module/
 
 #### if you intend to use enterprise features of the database
 ```
-export TF_VAR_cluster_organization={CLUSTER ORG}
-export TF_VAR_enterprise_license={LICENSE}
+add the enterprise license and the cluster organziation to the following files in the region subdirectory under provisioners/temp
+[enterprise_license](provisioners/temp/)   
+[cluster_organization](provisioners/temp/)   
 ```
 #### Prepare
 * Use the terraform/ansible deployment using the subdirectories [region1](region1) and/or [region2](region2) in the deployment github
@@ -109,9 +110,8 @@ terraform destroy
 
 ### Run Terraform
 *  terraform apply in each region directory-reference the steps [noted above](#run-this-terraform-script)
+* add license and cluster org to the provisioners/temp/<region>
 ```bash
-export TF_VAR_cluster_organization={CLUSTER ORG}
-export TF_VAR_enterprise_license={LICENSE}
 git clone https://github.com/jphaugla/AZURE-Terraform-CRDB-Module.git
 cd AZURE-Terraform-CRDB-Module/region1
 terraform init
