@@ -1,0 +1,35 @@
+---
+- name: enable postgresql stream 15
+  become: yes
+  shell: 
+    cmd: dnf install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-9-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+
+- name: install postgresql 
+  become: yes
+  shell: 
+    cmd: dnf -y install postgresql15-server
+
+- name: postgresql setup
+  become: yes
+  shell:
+    cmd: /usr/pgsql-15/bin/postgresql-15-setup initdb 
+    creates: /var/lib/pgsql/15/data/postgresql.conf
+
+- name: copy pg_hba.conf
+  become: yes
+  copy:
+    src: pg_hba.conf
+    dest: /var/lib/pgsql/15/data/pg_hba.conf
+    owner: postgres
+    group: postgres
+    mode: '0600'
+
+- name: start postgres
+  become: yes
+  shell: 
+    cmd: systemctl start postgresql-15
+
+- name: set to start postgres on startup
+  become: yes
+  shell: 
+    cmd: systemctl enable postgresql-15

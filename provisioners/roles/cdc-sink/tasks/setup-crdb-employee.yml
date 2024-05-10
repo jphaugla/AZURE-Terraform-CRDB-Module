@@ -1,0 +1,8 @@
+- name: copy create if not exist database command for cockroach
+  copy:
+    src: createCRDB.sql
+    dest: /tmp/createCRDB.sql
+    mode: '0644'
+
+- name: create employee database if not exists for cockroach
+  command: "{{ lookup('template','createCRDB.j2') }}"

@@ -9,11 +9,6 @@
   when:
     - save_ips|bool
 
-- name: save tls files to the kafka machine from local copy
-  include_tasks: put-crdb-tls.yml
-  when:
-    - get_tls|bool
-
 - name: confluent install
   include_tasks: confluent-install.yml
   when:

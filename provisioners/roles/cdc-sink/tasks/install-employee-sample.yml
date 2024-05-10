@@ -1,0 +1,38 @@
+- name: get employee dump file
+  get_url:
+    url: https://raw.githubusercontent.com/neondatabase/postgres-sample-dbs/main/employees.sql.gz
+    dest: /tmp/employees.sql.gz
+    mode: '0755'
+
+- name: copy create if not exist database command for postgres
+  copy:
+    src: createDB.sql
+    dest: /tmp/createDB.sql
+    mode: '0755'
+  ignore_errors: true
+
+- name: create employees database if not exists for postgres
+  become: yes
+  become_user: postgres
+  shell:
+    cmd: psql  --file /tmp/createDB.sql 
+
+- name: load postgres employee dump
+  become: yes
+  become_user: postgres
+  shell:
+    cmd:  pg_restore -v -d employees -Fc  /tmp/employees.sql.gz --no-privileges --no-owner -c
+  ignore_errors: true
+
+- name: copy move schema
+  copy:
+    src: moveSchema.sql
+    dest: /tmp/moveSchema.sql
+    mode: '0755'
+
+- name: move the schema to public
+  become: yes
+  become_user: postgres
+  shell:
+    cmd: psql -d employees --file /tmp/moveSchema.sql 
+

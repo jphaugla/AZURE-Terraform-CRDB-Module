@@ -1,0 +1,2 @@
+export CONNECT='postgresql://jhaugland@{{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}}:26257/employees?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.jhaugland.crt&sslkey=/home/adminuser/certs/client.jhaugland.key'
+molt fetch --source "postgres://jhaugland:jasonrocks@localhost:5432/employees" --target "${CONNECT}" --table-handling 'drop-on-target-and-recreate' --direct-copy  --non-interactive

@@ -6,6 +6,11 @@ install_java_maven_go: true
 add_githubs: true
 package_java_app: true
 install_cdc_sink: true
+install_molt: true
+install_postgres: true
+init_postgres: true
+install_employee_sample: true
+setup_crdb_employee: true
 install_nodejs_typescript: true
 nvm_version: "0.39.1"
 node_version: "19.7.0"

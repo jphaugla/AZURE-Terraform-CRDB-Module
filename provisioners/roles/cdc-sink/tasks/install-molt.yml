@@ -1,0 +1,30 @@
+- name: Create a directory if it does not exist
+  become: yes
+  file:
+    path: /opt
+    state: directory
+    mode: '0755'
+    owner: adminuser
+    group: adminuser
+
+- name: wget molt
+  unarchive:
+    src: https://molt.cockroachdb.com/molt/cli/molt-latest.linux-amd64.tgz
+    dest: /opt
+    remote_src: yes
+    creates: /opt/molt
+
+- name: create molt link
+  become: yes
+  file:
+    src: /opt/molt
+    dest:  /usr/bin/molt
+    owner: root
+    group: root
+    state: link
+
+- name: save start script
+  copy:
+    content: "{{ lookup('template','molt-fetch.j2') }}"
+    dest: /opt/molt-fetch.sh
+    mode: '0755'

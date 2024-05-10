@@ -6,6 +6,36 @@
   when:
     - install_cdc_sink|bool
 
+- name: install molt
+  include_tasks: install-molt.yml
+  when:
+    - install_molt|bool
+
+- name: install postgres
+  include_tasks: install-postgres.yml
+  when:
+    - install_postgres|bool
+
+- name: add employee sample database
+  include_tasks: install-employee-sample.yml
+  when:
+    - install_employee_sample|bool
+
+- name: add employee target database
+  include_tasks: setup-crdb-employee.yml
+  when:
+    - setup_crdb_employee|bool
+
+- name: create cdc-sink
+  include_tasks: create-cdc-sink.yml
+  when:
+    - create_cdc_sink|bool
+
+- name: create kv workload
+  include_tasks: create-kv.yml
+  when:
+    - create_kv|bool
+
 - name: create cdc-sink
   include_tasks: create-cdc-sink.yml
   when:
