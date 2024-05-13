@@ -66,6 +66,7 @@ add the enterprise license and the cluster organziation to the following files i
   * This allows your client workstation to access the nodes through their public IP address
   * This access is needed for the ansible scripts to perform necessary operations
 * *NOTE:* Inside the application node, this [banking java application](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB) will be deployed and configured
+  * if no need for the application to run, kill the pid.  Easy to find the pid by doing a grep on java and killing the application job
 
 #### Kick off terraform script
 modify [main.tf](region1/main.tf)
@@ -259,8 +260,10 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
           * [java installed](provisioners/roles/app-node/tasks/install-java-maven-go.yml)
           * [make der certs](provisioners/roles/app-node/tasks/create-der-certs.yml)
           * [ensure git installed](provisioners/roles/app-node/tasks/install-git.yml) and [bank github cloned](provisioners/roles/app-node/tasks/add-githubs.yml)
-    * [cdc-sink](provisioners/roles/cdc-sink) creates cdc-sink/replicator deployment
+    * [cdc-sink](provisioners/roles/cdc-sink) creates cdc-sink/replicator and molt deployment
       * cdc-sink is [installed](provisioners/roles/app-node/tasks/install-cdc-sink.yml) and [started](provisioners/roles/app-node/tasks/create-cdc-sink.yml)
+      * molt is also [installed](provisioners/roles/cdc-sink/tasks/install-molt.yml)
+      * molt can be executed using a sample script copied to the application node with /opt/molt-fetch.sh
       * cdc-sink needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
     * [kafka-node](provisioners/roles/kafka-node)
       * [confluent installed](provisioners/roles/kafka-node/tasks/confluent-install.yml)
