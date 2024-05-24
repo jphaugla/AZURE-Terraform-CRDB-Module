@@ -7,23 +7,23 @@ locals {
 }
 
 resource "local_file" "write_tls_cert" {
-   filename = "${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_cert"
+   filename = "${path.module}/${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_cert"
    content = local.tls_cert
 }
 resource "local_file" "write_tls_user_cert" {
-   filename = "${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_user_cert"
+   filename = "${path.module}/${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_user_cert"
    content = local.tls_user_cert
 }
 resource "local_file" "write_tls_user_key" {
-   filename = "${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_user_key"
+   filename = "${path.module}/${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_user_key"
    content = local.tls_user_key
 }
 resource "local_file" "write_tls_private_key" {
-   filename = "${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_private_key"
+   filename = "${path.module}/${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_private_key"
    content = local.tls_private_key
 }
 resource "local_file" "write_tls_public_key" {
-   filename = "${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_public_key"
+   filename = "${path.module}/${var.instances_inventory_directory}/temp/${var.virtual_network_location}/tls_public_key"
    content = local.tls_public_key
 }
 
