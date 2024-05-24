@@ -51,11 +51,9 @@ cd AZURE-Terraform-CRDB-Module/
 ```
 
 #### if you intend to use enterprise features of the database
-```
-add the enterprise license and the cluster organziation to the following files in the region subdirectory under provisioners/temp
+add the enterprise license and the cluster organziation to the following files in the region subdirectory under provisioners/temp So for example if the region is centralus, add the contents of your licence key to a file in provisioners/temp/centralus/enterprise_license
 [enterprise_license](provisioners/temp/)   
 [cluster_organization](provisioners/temp/)   
-```
 #### Prepare
 * Use the terraform/ansible deployment using the subdirectories [region1](region1) and/or [region2](region2) in the deployment github
 * Can disable deployment of Kafka by setting the *include_ha_proxy* flag to "no" in [deploy main.tf](region1/main.tf)
