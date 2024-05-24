@@ -62,10 +62,11 @@ module "azure" {
 # Cluster Enterprise License Keys
 # ----------------------------------------
 # Be sure to do the following in your environment if you plan on installing the license keys
-# must add the enterprise licence and the cluster organization to the following subdirectory 
-#  ../provisioners/temp/<region>/enterprise_licence
-#  ../provisioners/temp/<region>/cluster_organization
+# must add the enterprise licence and the cluster organization to specified subdirectory 
+#  ${full_path_license_directory}/enterprise_licence
+#  ${full_path_license_directory}/cluster_organization
    install_enterprise_keys   = "yes"
+   full_path_license_directory = /Users/jasonhaugland/.crdb/
    
 # ----------------------------------------
 # HA Proxy Instance Specifications

@@ -445,3 +445,7 @@ variable "test-version" {
   description = "The version of the image"
   default     = "latest"
 }
+
+variable "full_path_license_directory" {
+  description = "full path to the license directory, needs two files cluster_organization and enterprise_lincense in the directory"
+}

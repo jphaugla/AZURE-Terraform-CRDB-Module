@@ -1,1 +1,1 @@
-set cluster setting enterprise.license='{{lookup('file', './temp/{{region}}/enterprise_license')}}';
+set cluster setting enterprise.license='{{lookup('file', '{{ full_path_license_directory }}/enterprise_license')}}';
