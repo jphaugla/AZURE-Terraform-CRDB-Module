@@ -1,5 +1,5 @@
 resource "local_file" "instances_file" {
-    filename = "${var.instances_inventory_directory}/${var.instances_inventory_file}"
+    filename = "${path.module}/${var.instances_inventory_directory}/${var.instances_inventory_file}"
     content = templatefile("${path.module}/${var.inventory_template_file}",
         {
             crdb_public_names = "${join("\n", (azurerm_public_ip.crdb-ip.*.name) )}"
