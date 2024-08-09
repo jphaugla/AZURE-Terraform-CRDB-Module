@@ -2,3 +2,7 @@
   include_tasks: save-ips.yml
   when:
     - save_ips|bool
+- name: disable firewalld
+  include_tasks: firewalld.yml
+  when:
+    - firewalld|bool

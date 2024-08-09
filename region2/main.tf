@@ -39,9 +39,9 @@ module "azure" {
 # CRDB Instance Specifications
 # ----------------------------------------
 #   this is very small node just for testing deployment
-#   crdb_vm_size               = "Standard_B2ms"
+   crdb_vm_size               = "Standard_B4ms"
 #   this is a medium size  production node
-   crdb_vm_size               = "Standard_D8s_v5"
+#   crdb_vm_size               = "Standard_D8s_v5"
    crdb_disk_size             = 128
    crdb_resize_homelv         = "yes"
    crdb_nodes                 = 3
@@ -56,7 +56,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "23.2.5"
+   crdb_version               = "24.2.0-beta.3"
 
 # ----------------------------------------
 # Cluster Enterprise License Keys
@@ -66,25 +66,25 @@ module "azure" {
 #  ${full_path_license_directory}/enterprise_licence
 #  ${full_path_license_directory}/cluster_organization
    install_enterprise_keys   = "yes"
-   full_path_license_directory = /Users/jasonhaugland/.crdb/
+   full_path_license_directory = "/Users/jasonhaugland/.crdb/"
 
 # ----------------------------------------
 # HA Proxy Instance Specifications
 # ----------------------------------------
    include_ha_proxy           = "yes"
 #  very small size just to verify functionality
-#   haproxy_vm_size            = "Standard_B2ms"
-   haproxy_vm_size            = "Standard_D4s_v5"
+   haproxy_vm_size            = "Standard_B4ms"
+#    haproxy_vm_size            = "Standard_D4s_v5"
 
 # ----------------------------------------
 # APP Instance Specifications
 # ----------------------------------------
    include_app                = "yes"
-   include_cdc_sink           = "yes"
+   include_cdc_sink           = "no"
    app_nodes                  = 1
 #   this is bare minimum for functionalizy
-#   app_vm_size                = "Standard_B2ms"
-   app_vm_size                = "Standard_D8s_v5"
+   app_vm_size                = "Standard_B4ms"
+#    app_vm_size                = "Standard_D8s_v5"
    app_disk_size              = 64
    app_resize_homelv          = "no"  # if the app_disk_size is greater than 64, then set this to "yes" so that the disk will be resized.  See warnings in vars.tf!
 

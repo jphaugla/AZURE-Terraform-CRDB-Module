@@ -31,6 +31,11 @@
   when:
     - install_nodejs_typescript|bool
 
+- name: install sysbench
+  include_tasks: install-sysbench.yml
+  when:
+    - install_sysbench|bool
+
 - name: create der certs
   include_tasks: create-der-certs.yml
   when:

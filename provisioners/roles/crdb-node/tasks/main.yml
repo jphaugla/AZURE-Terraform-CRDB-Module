@@ -8,12 +8,17 @@
   when:
     - gen_certs|bool
 
+- name: disable firewalld
+  include_tasks: firewalld.yml
+  when:
+    - firewalld|bool
+
 - name: start crdb on this node
   include_tasks: start-crdb.yml
   when:
     - start_crdb|bool
 
-- name: save external and internal ip addresses
+- name: create changefeed scripts
   include_tasks: changefeed.yml
   when:
     - changefeed|bool

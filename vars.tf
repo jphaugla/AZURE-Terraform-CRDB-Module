@@ -411,13 +411,13 @@
     variable "instances_inventory_directory" {
         description = "Path to send inventory details for ansible later."
         type        = string
-        default = "../provisioners"
+        default = "provisioners"
     }
 
     variable "inventory_template_file" {
         description = "File name and Path to for inventory template file."
         type        = string
-        default = "../templates/inventory.tpl"
+        default = "templates/inventory.tpl"
     }
 
     variable "ansible_verbosity_switch" {

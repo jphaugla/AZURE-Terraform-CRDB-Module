@@ -56,8 +56,8 @@ add the enterprise license and the cluster organziation to the following files i
 [cluster_organization](provisioners/temp/)   
 #### Prepare
 * Use the terraform/ansible deployment using the subdirectories [region1](region1) and/or [region2](region2) in the deployment github
-* Can disable deployment of Kafka by setting the *include_ha_proxy* flag to "no" in [deploy main.tf](region1/main.tf)
-* Ensure *install_cdc_sink* flag and *create_cdc_sink* flag are set to true in [main.yml](provisioners/roles/app-node/vars/main.yml)
+* Can enable/disable deployment of Kafka by setting the *include_ha_proxy* flag to "no" in [deploy main.tf](region1/main.tf)
+* Can enable/disable deployent of replicator/cdc_sink using *include_cdc_sink* flag in [main.tf](region1/main.tf)
 * Ensure *install_enterprise_keys* is set in [main.tf](region1/main.tf)
 * Depending on needs, decide whether to deploy kafka setting the *include_kafka* to yes or no in [main.tf](region1/main.tf)
 * Look up the IP address of your client workstation and put that IP address in *my_ip_address*

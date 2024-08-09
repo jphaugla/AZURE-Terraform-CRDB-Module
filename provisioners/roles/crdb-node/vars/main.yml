@@ -2,3 +2,4 @@ save_ips: true
 gen_certs: true
 start_crdb: true
 changefeed: true
+firewalld: true

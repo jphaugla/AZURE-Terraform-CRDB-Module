@@ -16,7 +16,7 @@
     dest: create-changefeed.sql
     mode: '0755'
 
-- name: save changefeed shell script
+- name: save changefeed kv shell script
   copy:
     src: create-changefeed-kv.sql
     dest: create-changefeed-kv.sql

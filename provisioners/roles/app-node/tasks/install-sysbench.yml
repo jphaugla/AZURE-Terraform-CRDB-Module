@@ -1,0 +1,15 @@
+- name: install sysbench rpm script
+  get_url:
+    url: https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh 
+    dest: script.rpm.sh
+
+- name: execute the rpm script
+  shell: 
+    cmd: script.rpm.sh
+
+# ignore errors because get an error if running this second time after updating scripts/setEnv.sh
+- name: Install sysbench
+  become: yes
+  yum:
+    name: sysbench
+    state: latest

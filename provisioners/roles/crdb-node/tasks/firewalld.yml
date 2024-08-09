@@ -1,0 +1,8 @@
+- name: stop firewalld
+  become: yes
+  shell:
+    cmd: "systemctl stop firewalld"
+- name: disable firewalld
+  become: yes
+  shell:
+    cmd: "systemctl disable firewalld"

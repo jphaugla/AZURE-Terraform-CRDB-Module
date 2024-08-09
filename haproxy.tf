@@ -45,7 +45,7 @@ resource "azurerm_linux_virtual_machine" "haproxy" {
   source_image_reference {
     offer     = "RHEL"
     publisher = "RedHat"
-    sku       = "8-lvm-gen2"
+    sku       = "9-lvm-gen2"
     version   = "latest"
   }
 
