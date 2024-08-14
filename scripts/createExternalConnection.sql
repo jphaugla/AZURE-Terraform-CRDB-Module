@@ -1,1 +1,0 @@
-CREATE EXTERNAL CONNECTION '<connection name>' AS '<CONN_URL>'; 
