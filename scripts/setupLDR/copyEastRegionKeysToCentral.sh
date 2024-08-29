@@ -1,13 +1,13 @@
 #!/bin/zsh
 COMMON_DIRECTORY=/Users/jasonhaugland/gits/AZURE-Terraform-CRDB-Module/provisioners/temp/
-SOURCE_REGION=centralus
+SOURCE_REGION=eastus2
 SOURCE_KEY_DIRECTORY=${COMMON_DIRECTORY}/${SOURCE_REGION}
-TARGET_REGION=eastus2
+TARGET_REGION=centralus
 TARGET_REGION_PEM=~/.ssh/jhaugland-${TARGET_REGION}.pem
 TARGET_DIRECTORY=/home/adminuser/${SOURCE_REGION}_certs
 # this is the only thing that needs to change
-# this should be public IPs in east for the CRDB nodes and the load balancer (haproxy)
-target_nodes=(20.96.183.150 20.161.52.174 68.154.32.195 52.167.45.106)
+# this should be public IP in central for the CRDB nodes and the load balancer (haproxy)
+target_nodes=(20.106.16.9 13.86.104.118 20.118.242.121)
 for TARGET_NODE in ${target_nodes}; do
    echo "doing ${TARGET_NODE}"
    ssh -i ${TARGET_REGION_PEM} adminuser@${TARGET_NODE} "rm -rf ${TARGET_DIRECTORY}"
