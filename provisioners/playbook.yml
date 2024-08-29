@@ -21,7 +21,7 @@
 - hosts: app_node_ips
   gather_facts: True
   roles:
-    - cdc-sink
+    - replicator-molt
 - hosts: haproxy_node_ips
   gather_facts: True
   roles:

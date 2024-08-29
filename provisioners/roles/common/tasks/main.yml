@@ -1,3 +1,6 @@
+- name: add file location to hold files
+  include_tasks: create-dirs.yml
+
 - name: install cockroach sql 
   include_tasks: install-cockroach-sql.yml
   when:

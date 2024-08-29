@@ -1,0 +1,49 @@
+- name: Create a directory if it does not exist
+  become: yes
+  file:
+    path: /opt
+    state: directory
+    mode: '0755'
+    owner: adminuser
+    group: adminuser
+
+- name: wget replicator and molt
+  unarchive:
+    src: https://molt.cockroachdb.com/molt/cli/molt-latest.linux-amd64.tgz
+    dest: /opt
+    remote_src: yes
+    creates: /opt/molt
+
+- name: wget repl.ts
+  get_url:
+    url: https://raw.githubusercontent.com/cockroachdb/replicator/master/scripts/active_active/userscripts/repl.ts 
+    dest: /opt/
+
+- name: create replicator link
+  become: yes
+  file:
+    src: /opt/replicator
+    dest:  /usr/bin/replicator
+    owner: root
+    group: root
+    state: link
+
+- name: create molt link
+  become: yes
+  file:
+    src: /opt/molt
+    dest:  /usr/bin/molt
+    owner: root
+    group: root
+    state: link
+
+- name: save typescript program
+  copy:
+    content: "{{ lookup('template','cluster-ts.j2') }}"
+    dest: /opt/cluster.ts
+
+- name: save start script
+  copy:
+    content: "{{ lookup('template','start-replicator.j2') }}"
+    dest: /opt/start.sh
+    mode: '0755'

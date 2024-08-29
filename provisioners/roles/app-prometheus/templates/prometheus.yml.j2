@@ -25,10 +25,10 @@ scrape_configs:
       labels:
         cluster: {{region}}-crdb
 
-  - job_name: 'cdc'
+  - job_name: 'replicator'
     metrics_path: '/_/varz'
     scheme: 'http'
     static_configs:
     - targets: [{{prometheus_app_string}}]
       labels:
-        cluster: {{region}}-cdc-sink
+        cluster: {{region}}-replicator

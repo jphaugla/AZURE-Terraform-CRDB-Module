@@ -5,8 +5,6 @@ maven_version: '3.9.6'
 install_java_maven_go: true
 add_githubs: true
 package_java_app: true
-install_cdc_sink: true
-install_molt: true
 install_postgres: true
 init_postgres: true
 install_employee_sample: true
@@ -16,6 +14,6 @@ nvm_version: "0.39.1"
 node_version: "19.7.0"
 add_password: true
 create_der_certs: true
-create_cdc_sink: true
+start_replicator: true
 start_java_app: true
 create_kv: true

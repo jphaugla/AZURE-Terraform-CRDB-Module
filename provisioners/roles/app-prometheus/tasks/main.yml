@@ -60,7 +60,8 @@
     daemon_reload: true
     name: grafana-server
     state: started
-    enabled: true
+    # enabled is giving odd Failed to execute /usr/lib/systemd/systemd-sysv-install: No such file or directory
+    # enabled: true
   tags:
     - grafana_run
 

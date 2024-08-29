@@ -24,12 +24,12 @@
     url_username: admin
     url_password: jasonrocks
 
-- name: Import Grafana cdc-sink dashboard 
+- name: Import Grafana replicator dashboard 
   community.grafana.grafana_dashboard:
     state: present
     commit_message: Updated by ansible
     overwrite: true
-    path: https://github.com/cockroachdb/cdc-sink/blob/master/scripts/dashboard/cdc-sink.json
+    path: https://github.com/cockroachdb/replicator/blob/master/scripts/dashboard/replicator.json
     url: http://localhost:9090
     url_username: admin
     url_password: jasonrocks

@@ -1,7 +1,7 @@
-- name: make log cdc-sink directory
+- name: make log replicator directory
   become: yes
   file: 
-    path: /mnt/datat1/cdc-sink
+    path: "{{ crdb_file_location }}/logs/replicator"
     state: directory
     mode: '0777'
     owner: adminuser
@@ -10,7 +10,7 @@
 - name: make app log directory
   become: yes
   file: 
-    path: /mnt/datat1/bank-app
+    path: "{{ crdb_file_location }}/logs/bank-app"
     state: directory
     mode: '0777'
     owner: adminuser

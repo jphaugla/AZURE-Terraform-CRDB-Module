@@ -1,4 +1,5 @@
 export CONNECT='postgresql://jhaugland@{{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}}:26257?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.jhaugland.crt&sslkey=/home/adminuser/certs/client.jhaugland.key'
 cockroach workload init kv ${CONNECT}
+cockroach sql --url=${CONNECT} --execute="ALTER TABLE KV.KV ADD COLUMN crdb_replication_origin_timestamp DECIMAL NOT VISIBLE NULL ON UPDATE NULL"
 sleep 5
 cockroach workload run  kv ${CONNECT}

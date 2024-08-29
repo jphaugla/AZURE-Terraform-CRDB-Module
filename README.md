@@ -7,10 +7,10 @@
     - [Prepare to run](#prepare)
     - [For Enterprise Features](#if-you-intend-to-use-enterprise-features-of-the-database)
     - [Kick off the script](#kick-off-terraform-script)
-  - [Deploy to 2 regions](#deploy-to-2-regions-with-cdc-sink)
+  - [Deploy to 2 regions](#deploy-to-2-regions-with-replicator)
     - [Run Terraform on each region](#run-terraform)
     - [Verify Deployments](#verify-deployment)
-      - [Ensure cdc-sink running](#ensure-cdc-sink-is-running-on-each-region)
+      - [Ensure replicator running](#ensure-replicator-is-running-on-each-region)
       - [Verify application running in each region](#verify-application-running-in-each-region)
     - [Deploy ChangeFeeds](#deploy-changefeeds)
     - [Add Grafana dashboards](#add-grafana-dashboards)
@@ -26,8 +26,8 @@
     - [CockroachDB Links](#cockroachdb-links)
     - [Other Links](#general-links)
     - [Terraform/Ansible Description](#terraformansible-documentation)
-    - [cdc-sink](#cdc-sink-replicator)
-      - [cdc-sink links](#cdc-sink-links)
+    - [replicator](#replicator-replicator)
+      - [replicator links](#replicator-links)
 
 ![Resources Created in the Terraform HCL](resources/azure-single-regon.drawio.png)
 
@@ -57,7 +57,7 @@ add the enterprise license and the cluster organziation to the following files i
 #### Prepare
 * Use the terraform/ansible deployment using the subdirectories [region1](region1) and/or [region2](region2) in the deployment github
 * Can enable/disable deployment of Kafka by setting the *include_ha_proxy* flag to "no" in [deploy main.tf](region1/main.tf)
-* Can enable/disable deployent of replicator/cdc_sink using *include_cdc_sink* flag in [main.tf](region1/main.tf)
+* Can enable/disable deployent of replicator using *start_replicator* flag in [main.tf](region1/main.tf)
 * Ensure *install_enterprise_keys* is set in [main.tf](region1/main.tf)
 * Depending on needs, decide whether to deploy kafka setting the *include_kafka* to yes or no in [main.tf](region1/main.tf)
 * Look up the IP address of your client workstation and put that IP address in *my_ip_address*
@@ -79,9 +79,9 @@ terraform apply
 Generic grafana prometheus plugin and grafana dashboard
 [configure prometheus data source for grafana](https://grafana.com/docs/grafana/latest/datasources/prometheus/configure-prometheus-data-source/)
 [import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
-Detailed steps are documented in the following grafana links for cockroachDB and cdc-sink/replicator.
+Detailed steps are documented in the following grafana links for cockroachDB and replicator/replicator.
 * [CockroachDB Grafana dashboards](https://www.cockroachlabs.com/docs/stable/monitor-cockroachdb-with-prometheus#step-5-visualize-metrics-in-grafana)
-* [cdc-sink/replicator](https://github.com/cockroachdb/cdc-sink/wiki/Monitoring)
+* [replicator/replicator](https://github.com/cockroachdb/replicator/wiki/Monitoring)
 #### Specific steps for github
 Prometheus and Grafana are configured and started by the ansible scripts.  Both are running as services on the haproxy node
 * Look up the haproxy node address in the region subdirectory under [provisioners/temp](provisioners/temp)
@@ -95,17 +95,18 @@ Prometheus and Grafana are configured and started by the ansible scripts.  Both 
     * scrolling to the bottom of the UI window
     * Click save and test
 * [import grafana dashboards](https://grafana.com/docs/grafana/latest/dashboards/build-dashboards/import-dashboards/)
-  * CockroachDB and cdc-sink/terminator grafana dashboards are available within [grafana dashboards folder](scripts/grafana_dashboards)
-    * These could be stale.  Refresh this folder using the [importGrafanaDashboards.sh](scripts/getGrafanaDashboards.sh)
-    * import all the dashboards.  One of them is for cdc-sink/terminator and the rest are cockroachDB dashboards
-    * *NOTE:* [cdc-sink.json](scripts/grafana_dashboards/cdc-sink.json) is only needed if doing cdc-sink/terminator  
+  * From the same grafana interface at [grafana ui](localhost:3000), Click on *Dashboards* using the above instructions
+  * CockroachDB and replicator/terminator grafana dashboards are available within [grafana dashboards folder](scripts/grafana_dashboards)
+    * These could be stale.  Refresh this folder using the [getGrafanaDashboards.sh](scripts/getGrafanaDashboards.sh)
+    * import all the dashboards.  One of them is for replicator and the rest are cockroachDB dashboards
+    * *NOTE:* [replicator.json](scripts/grafana_dashboards/replicator.json) is only needed if doing replicator
     
 ### clean up and remove everything that was created
 
 ```
 terraform destroy
 ```
-## Deploy to 2 regions with cdc-sink
+## Deploy to 2 regions with replicator
 
 ### Run Terraform
 *  terraform apply in each region directory-reference the steps [noted above](#run-this-terraform-script)
@@ -121,15 +122,15 @@ terraform apply
 ```
 ### Verify deployment
 * This will deploy this [Digital-Banking-CockroachDB github](https://github.com/jphaugla/CockroachDBearch-Digital-Banking-CockroachDB) into the application node with connectivity to cockroachDB.  
-  Additionally, cdc-sink is deployed and running on the application node also with connectivity to haproxy and cockroachDB in the same region 
+  Additionally, replicator is deployed and running on the application node also with connectivity to haproxy and cockroachDB in the same region 
 
-#### Ensure cdc-sink is running on each region
+#### Ensure replicator is running on each region
 ```bash
 cd ~/AZURE-Terraform-CRDB-Module/provisioners/temp/{region_name}
 ssh -i path_to_ssh_file adminuser@`cat app_external_ip.txt`
-ps -ef |grep cdc-sink
+ps -ef |grep replicator
 # if it is not running, start it
-cd /opt/cdc-sink-linux-amd64-master
+cd /opt
 ./start.sh
 ```
 #### Verify application running in each region
@@ -153,7 +154,7 @@ java -jar target/cockroach-0.0.1-SNAPSHOT.jar
 ```
 
 ### Deploy changefeeds
-* The necessary manual step is to deploy a [CockroachDB Changefeed](https://www.cockroachlabs.com/docs/stable/create-changefeed) across the regions to make active/active cdc-sink between the two otherwise independent regions
+* The necessary manual step is to deploy a [CockroachDB Changefeed](https://www.cockroachlabs.com/docs/stable/create-changefeed) across the regions to make active/active replicator between the two otherwise independent regions
   * Port 30004 is open on both regions to allow the changefeed to communicate with the application server on the other region
 * Start the changefeed on each side with changefeed pointing to the other sids's application node external IP address
 * The changefeed script is written on each of the cockroach database nodes by the terraform script.  Login to any of the cockroach
@@ -240,7 +241,7 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
   * [haproxy node *haproxy.tf*](haproxy.tf)
   * [cockroachDB node *instance.tf*](instance.tf)
 * Network components including security groups with port permissions are in [network.tf](network.tf)
-* Can use either of the regions subdirectories to kick off the deployment.  Both regions are defined to enable cdc-sink deployment
+* Can use either of the regions subdirectories to kick off the deployment.  Both regions are defined to enable replicator deployment
   * [region1](region1/main.tf) 
   * [region2](region2/main.tf)
 * These files connect terraform and ansible
@@ -252,39 +253,39 @@ https://github.com/guillermo-musumeci/terraform-azure-vm-bootstrapping-2/blob/ma
   * Each node group has a subdirectory under [provisioners/roles](provisioners/roles)
     * Each node group has ansible code to export the node's private and public ip addresses to a region subdirectory under [provisioners/temp](provisioners/temp)
     * [haproxy-node](provisioners/roles/haproxy-node)  doesn't have any additional installation
-    * [app-node](provisioners/roles/app-node) creates an application node running cdc-sink and a Digital Banking java application 
+    * [app-node](provisioners/roles/app-node) creates an application node running replicator and a Digital Banking java application 
       * banking java application is [installed](provisioners/roles/app-node/tasks/package-java-app.yml) and [started](provisioners/roles/app-node/tasks/start-java-app.yml)
         * banking java application needs these tasks to run as well:
           * [java installed](provisioners/roles/app-node/tasks/install-java-maven-go.yml)
           * [make der certs](provisioners/roles/app-node/tasks/create-der-certs.yml)
           * [ensure git installed](provisioners/roles/app-node/tasks/install-git.yml) and [bank github cloned](provisioners/roles/app-node/tasks/add-githubs.yml)
-    * [cdc-sink](provisioners/roles/cdc-sink) creates cdc-sink/replicator and molt deployment
-      * cdc-sink is [installed](provisioners/roles/app-node/tasks/install-cdc-sink.yml) and [started](provisioners/roles/app-node/tasks/create-cdc-sink.yml)
-      * molt is also [installed](provisioners/roles/cdc-sink/tasks/install-molt.yml)
+    * [replicator](provisioners/roles/replicator) creates replicator and molt deployment
+      * replicator is [installed](provisioners/roles/app-node/tasks/install-replicator.yml) and [started](provisioners/roles/app-node/tasks/create-replicator.yml)
+      * molt is also [installed](provisioners/roles/replicator/tasks/install-molt.yml)
       * molt can be executed using a sample script copied to the application node with /opt/molt-fetch.sh
-      * cdc-sink needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
+      * replicator needs [node.js installed](provisioners/roles/app-node/tasks/install-nodejs-typescript.yml)
     * [kafka-node](provisioners/roles/kafka-node)
       * [confluent installed](provisioners/roles/kafka-node/tasks/confluent-install.yml)
       * [confluent connect plug-ins](provisioners/roles/kafka-node/tasks/confluent-connect-plug.yml)
       * [confluent start](provisioners/roles/kafka-node/tasks/confluent-start.yml)
       * [confluent add connectors](provisioners/roles/kafka-node/tasks/confluent-add-connectors.yml)
     * [crdb-node](provisioners/roles/crdb-node)
-      * For using cdc-sink, a changefeed script is [created](provisioners/roles/kafka-node/tasks/main.yml) using a [j2 template](provisioners/roles/crdb-node/templates/create-changefeed.j2)
+      * For using replicator, a changefeed script is [created](provisioners/roles/kafka-node/tasks/main.yml) using a [j2 template](provisioners/roles/crdb-node/templates/create-changefeed.j2)
   * Under each of these node groups
     * A vars/main.yml file has variable flags to enable/disable processing
     * A tasks/main.yml calls the required tasks to do the actual processing
     * A templates directory has j2 files allowing environment variable and other substitution
-## cdc-sink (replicator)
-![](resources/cdc-sink-components.png)
-This is a schematic of the cdc-sink deployment.  Within region, the nodes only use the private IPs to connect.  
-The only port needed to be opened between the regions is the port for cdc-sink running on the application node (30004).  The changefeed from 
+## replicator (replicator)
+![](resources/replicator-components.png)
+This is a schematic of the replicator deployment.  Within region, the nodes only use the private IPs to connect.  
+The only port needed to be opened between the regions is the port for replicator running on the application node (30004).  The changefeed from 
 the other region will have this application nodes public IP address in its webhook address.
-### cdc-sink links
+### replicator links
 * [cockroachDB create changefeed](https://www.cockroachlabs.com/docs/stable/create-changefeed)
-* [cdc-sink github](https://github.com/cockroachdb/cdc-sink)
-* [cdc-sink docker hub](https://hub.docker.com/r/cockroachdb/cdc-sink/tags)
-* [active-active Docker deployment](https://github.com/cockroachdb/cdc-sink/tree/master/scripts/active_active)
-* [cdc-sink/replicator grafana dashboards](https://github.com/cockroachdb/cdc-sink/wiki/Monitoring)
+* [replicator github](https://github.com/cockroachdb/replicator)
+* [replicator docker hub](https://hub.docker.com/r/cockroachdb/replicator/tags)
+* [active-active Docker deployment](https://github.com/cockroachdb/replicator/tree/master/scripts/active_active)
+* [replicator/replicator grafana dashboards](https://github.com/cockroachdb/replicator/wiki/Monitoring)
 
 ## To tear it all down
 NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command is an option but sometime a force delete is needed on the OS disk drives of some nodes

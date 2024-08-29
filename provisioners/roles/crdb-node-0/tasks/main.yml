@@ -40,3 +40,6 @@
 - name: add enterprise license
   shell:
     cmd: "cockroach sql --certs-dir=certs --file=enterprise_license.sql"
+
+- name: enable rangefeed
+  command: "{{ lookup('template','enable-rangefeed.j2') }}"

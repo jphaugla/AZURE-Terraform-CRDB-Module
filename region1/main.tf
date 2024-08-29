@@ -16,6 +16,11 @@ module "azure" {
 # ----------------------------------------
    my_ip_address              = "174.141.204.193"
    
+# ----------------------------------------
+# Allow non-TLS connections
+# ----------------------------------------
+  allow_non_tls              = true
+
 # Azure Locations: "australiacentral,australiacentral2,australiaeast,australiasoutheast,brazilsouth,brazilsoutheast,brazilus,canadacentral,canadaeast,centralindia,centralus,centraluseuap,eastasia,eastus,eastus2,eastus2euap,francecentral,francesouth,germanynorth,germanywestcentral,israelcentral,italynorth,japaneast,japanwest,jioindiacentral,jioindiawest,koreacentral,koreasouth,malaysiasouth,northcentralus,northeurope,norwayeast,norwaywest,polandcentral,qatarcentral,southafricanorth,southafricawest,southcentralus,southeastasia,southindia,swedencentral,swedensouth,switzerlandnorth,switzerlandwest,uaecentral,uaenorth,uksouth,ukwest,westcentralus,westeurope,westindia,westus,westus2,westus3,austriaeast,chilecentral,eastusslv,israelnorthwest,malaysiawest,mexicocentral,newzealandnorth,southeastasiafoundational,spaincentral,taiwannorth,taiwannorthwest"
 # ----------------------------------------
 # Resource Group
@@ -34,6 +39,12 @@ module "azure" {
 # ----------------------------------------
    virtual_network_cidr       = "192.168.3.0/24"
    virtual_network_location   = "eastus2"
+
+#  file location for larger files not to be placed in the user home directory
+#  will be created as root but owned by the adminuser on app-node and crdb-nodes 
+#  will hold application log files, cockraoch_data, and other large files.  Subdirectories
+#  will be used from this location
+   crdb_file_location         = "/mnt/adminuser"
    
 # ----------------------------------------
 # CRDB Instance Specifications
@@ -43,7 +54,6 @@ module "azure" {
 #   this is a medium size  production node 
 #   crdb_vm_size               = "Standard_D8s_v5"
    crdb_disk_size             = 128
-   crdb_resize_homelv         = "yes"
    crdb_nodes                 = 3
    
 # ----------------------------------------
@@ -56,7 +66,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "24.2.0-rc.1"
+   crdb_version               = "24.2.0"
    
 # ----------------------------------------
 # Cluster Enterprise License Keys
@@ -74,19 +84,19 @@ module "azure" {
    include_ha_proxy           = "yes"
 #  very small size just to verify functionality
    haproxy_vm_size            = "Standard_B4ms"
-#    haproxy_vm_size            = "Standard_D4s_v5"
+#   haproxy_vm_size            = "Standard_D4s_v5"
    
 # ----------------------------------------
 # APP Instance Specifications
 # ----------------------------------------
    include_app                = "yes"
-   include_cdc_sink           = "no"
+#  this will install postgres with employee database and start replicator
+   start_replicator           = "yes"
    app_nodes                  = 1
 #   this is bare minimum for functionalizy
    app_vm_size                = "Standard_B4ms"
 #    app_vm_size                = "Standard_D8s_v5"
    app_disk_size              = 64
-   app_resize_homelv          = "no"  # if the app_disk_size is greater than 64, then set this to "yes" so that the disk will be resized.  See warnings in vars.tf!
    
 # ----------------------------------------
 # Kafka Instance Specifications

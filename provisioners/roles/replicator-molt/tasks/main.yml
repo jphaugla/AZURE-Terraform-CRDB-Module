@@ -1,15 +1,5 @@
 - meta: end_play
-  when: include_cdc_sink != "yes"
-
-- name: install cdc_sink
-  include_tasks: install-cdc-sink.yml
-  when:
-    - install_cdc_sink|bool
-
-- name: install molt
-  include_tasks: install-molt.yml
-  when:
-    - install_molt|bool
+  when: start_replicator != "yes"
 
 - name: install postgres
   include_tasks: install-postgres.yml
@@ -26,10 +16,10 @@
   when:
     - setup_crdb_employee|bool
 
-- name: create cdc-sink
-  include_tasks: create-cdc-sink.yml
+- name: start replicator
+  include_tasks: start-replicator.yml
   when:
-    - create_cdc_sink|bool
+    - start_replicator|bool
 
 - name: create kv workload
   include_tasks: create-kv.yml

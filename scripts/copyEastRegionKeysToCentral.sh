@@ -7,7 +7,7 @@ TARGET_REGION_PEM=~/.ssh/jhaugland-${TARGET_REGION}.pem
 TARGET_DIRECTORY=/home/adminuser/${SOURCE_REGION}_certs
 # this is the only thing that needs to change
 # this should be public IP in central for the CRDB nodes and the load balancer (haproxy)
-target_nodes=(20.40.220.182 74.249.178.47 4.150.186.24 40.86.117.91)
+target_nodes=(20.84.145.187 20.80.98.235 20.29.19.72 52.176.179.248)
 for TARGET_NODE in ${target_nodes}; do
    echo "doing ${TARGET_NODE}"
    ssh -i ${TARGET_REGION_PEM} adminuser@${TARGET_NODE} "rm -rf ${TARGET_DIRECTORY}"

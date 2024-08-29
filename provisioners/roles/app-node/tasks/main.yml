@@ -11,6 +11,11 @@
   when:
     - install_java_maven_go|bool
 
+- name: install molt and replicator
+  include_tasks: install-molt-replicator.yml
+  when:
+    - install_molt_replicator|bool
+
 - name: install git
   include_tasks: install-git.yml
   when:

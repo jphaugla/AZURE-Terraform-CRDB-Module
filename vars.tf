@@ -23,6 +23,11 @@
       description = "Owner of the infrastructure"
       type        = string
     }
+    variable "allow_non_tls" {
+      description = "start the nodes with the accept-sql-without-tls flag which is insecure"
+      type        = bool
+      default     = false
+    }
     # ----------------------------------------
     # Create EC2 Instances - for testing purposes
     # ----------------------------------------
@@ -117,6 +122,11 @@
       type        = string
       default     = "m6i.large"
     }
+    variable "crdb_file_location" {
+      description = "The directory to use for cockroach_data directory"
+      type        = string
+      default     = "/home/adminuser"
+    }
     variable "crdb_nodes" {
       description = "Number of crdb nodes.  This should be a multiple of 3.  Each node is an Azure Instance"
       type        = number
@@ -135,18 +145,6 @@
         error_message = "CRDB Node disk size (in GB) must be 64, 128, 256 or 512"
       }
     }
-    # Note that crdb_resize_homelv is dangerous.  Only use this option if you are use the redhat source image and only if you are sure
-    # that sda2 contains the lv "rootvg-homelv".   This procedure will add any unused space to homelv.
-    variable "crdb_resize_homelv" {
-      description = "When creating a larger disk than exists in the image you'll need to repartition the disk to use the remaining space."
-      type        = string
-      default     = "no"
-      validation {
-        condition = contains(["yes", "no"], var.crdb_resize_homelv)
-        error_message = "Valid value for variable 'crdb_resize_homelv' is : 'yes' or 'no'"        
-      }  
-    }
-
 # ----------------------------------------
 # CRDB Admin User - Cert Connection
 # ----------------------------------------
@@ -184,7 +182,7 @@
       default     = ""
     }
     variable "prometheus_app_string" {
-      description = "The  prometheus cdc-sink string to use at start-up.  Do not supply a value"
+      description = "The  prometheus string to use at start-up.  Do not supply a value"
       type        = string
       default     = ""
     }
@@ -300,13 +298,13 @@
       }
     }
 
-    variable "include_cdc_sink" {
-      description = "'yes' or 'no' to include cdc-sink application"
+    variable "start_replicator" {
+      description = "'yes' or 'no' to start replicator application"
       type        = string
       default     = "yes"
       validation {
-        condition = contains(["yes", "no"], var.include_cdc_sink)
-        error_message = "Valid value for variable 'include_cdc_sink' is : 'yes' or 'no'"        
+        condition = contains(["yes", "no"], var.start_replicator)
+        error_message = "Valid value for variable 'start_replicator' is : 'yes' or 'no'"        
       }
     }
 

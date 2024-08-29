@@ -1,1 +1,1 @@
-cockroach sql --host=localhost --certs-dir=certs --file createExternalConnectionCentralToEast.sql
+cockroach sql --host=localhost --certs-dir=certs --user=jhaugland --file createExternalConnectionPullEastFromCentral.sql

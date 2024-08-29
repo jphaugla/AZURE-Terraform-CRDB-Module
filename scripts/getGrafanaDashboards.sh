@@ -9,7 +9,7 @@ curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/
 curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/grafana-dashboards/by-cluster/replication.json'  > ${DASHBOARD_DIR}/replication.json
 curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/grafana-dashboards/by-cluster/runtime.json'  > ${DASHBOARD_DIR}/runtime.json
 curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/grafana-dashboards/by-cluster/slow_request.json'  > ${DASHBOARD_DIR}/slow_request.json
+curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/grafana-dashboards/by-cluster/sql.json'  > ${DASHBOARD_DIR}/sql.json
 curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/grafana-dashboards/by-cluster/storage.json'  > ${DASHBOARD_DIR}/storage.json
-curl 'https://raw.githubusercontent.com/cockroachdb/cockroach/master/monitoring/grafana-dashboards/by-cluster/storage.json'  > ${DASHBOARD_DIR}/storage.json
-# for cdc-sink
-curl 'https://raw.githubusercontent.com/cockroachdb/cdc-sink/master/scripts/dashboard/cdc-sink.json' > ${DASHBOARD_DIR}/cdc-sink.json
+# for replicator
+curl 'https://raw.githubusercontent.com/cockroachdb/replicator/master/scripts/dashboard/replicator.json' > ${DASHBOARD_DIR}/replicator.json

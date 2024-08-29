@@ -44,15 +44,15 @@ resource "azurerm_network_security_rule" "desk-ssh" {
 }
 
 #  30004 and 26257 should not be open to all this is not really cool
-resource "azurerm_network_security_rule" "sink-webhook" {
-        name                       = "cdc-sink-webhook"
+resource "azurerm_network_security_rule" "replicator-webhook" {
+        name                       = "replicator-webhook"
         priority                   = 1011
         direction                  = "Inbound"
         access                     = "Allow"
         protocol                   = "*"
         source_address_prefix      = "*"
         source_port_range          = "*"
-        destination_port_ranges    = [30004,26257]
+        destination_port_ranges    = [30004]
         destination_address_prefix = "*"
         resource_group_name        = local.resource_group_name
 	network_security_group_name = azurerm_network_security_group.sg.name
