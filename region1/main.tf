@@ -91,7 +91,7 @@ module "azure" {
 # ----------------------------------------
    include_app                = "yes"
 #  this will install postgres with employee database and start replicator
-   start_replicator           = "yes"
+   start_replicator           = "no"
    app_nodes                  = 1
 #   this is bare minimum for functionalizy
    app_vm_size                = "Standard_B4ms"
