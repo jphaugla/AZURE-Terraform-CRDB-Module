@@ -5,15 +5,15 @@
     state: file
     mode: 0644
 
-- name: Changing perm of client.jhaugland.crt
+- name: Changing perm of client.db_admin_user.crt
   file: 
-    path: /home/adminuser/certs/client.jhaugland.crt
+    path: /home/adminuser/certs/client.{{ db_admin_user }}.crt
     state: file
     mode: 0644
 
-- name: Changing perm of client.jhaugland.key
+- name: Changing perm of client.db_admin_user.key
   file: 
-    path: /home/adminuser/certs/client.jhaugland.key
+    path: /home/adminuser/certs/client.{{ db_admin_user }}.key
     state: file
     mode: 0644
 
@@ -23,14 +23,14 @@
     src: /home/adminuser/certs/ca.crt
     flat: yes
 
-- name: save client.jhaugland.crt locally
+- name: save client.db_admin_user.crt locally
   fetch:
-    dest: "temp/{{ region }}/client.jhaugland.crt"
-    src: /home/adminuser/certs/client.jhaugland.crt
+    dest: "temp/{{ region }}/client.{{ db_admin_user }}.crt"
+    src: "/home/adminuser/certs/client.{{ db_admin_user }}.crt"
     flat: yes
 
-- name: save client.jhaugland.key locally
+- name: save client.db_admin_user.key locally
   fetch:
-    dest: "temp/{{ region }}/client.jhaugland.key"
-    src: /home/adminuser/certs/client.jhaugland.key
+    dest: "temp/{{ region }}/client.{{ db_admin_user }}.key"
+    src: "/home/adminuser/certs/client.{{ db_admin_user }}.key"
     flat: yes

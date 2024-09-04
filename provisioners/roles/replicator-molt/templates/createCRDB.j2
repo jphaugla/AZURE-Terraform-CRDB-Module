@@ -1,1 +1,1 @@
-/usr/local/bin/cockroach sql --host={{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}} --user=jhaugland --certs-dir=certs --file /tmp/createCRDB.sql
+/usr/local/bin/cockroach sql --host={{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}} --user={{ db_admin_user }} --certs-dir=certs --file /tmp/createCRDB.sql

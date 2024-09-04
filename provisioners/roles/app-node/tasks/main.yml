@@ -3,6 +3,9 @@
   when:
     - save_ips|bool
 
+- meta: end_play
+  when: include_app != "yes"
+
 - name: create log directories
   include_tasks: create-dirs.yml
 

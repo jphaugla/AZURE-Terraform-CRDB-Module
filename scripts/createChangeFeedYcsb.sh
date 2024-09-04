@@ -3,7 +3,9 @@
 export SRC_HAPROXY=20.14.141.158
 # this is internal ip for  application node on source side
 export APP_INT=192.168.3.101
-export URL_REQUIRE="postgresql://root:jasonrocks@${SRC_HAPROXY}:26257/ycsb?sslmode=require"
+export DBUSER=jhaugland
+export DBPW=jasonrocks
+export URL_REQUIRE="postgresql://{DBUSER}:{DBPW}@${SRC_HAPROXY}:26257/ycsb?sslmode=require"
 cockroach sql --url $URL_REQUIRE --execute "SET CLUSTER SETTING enterprise.license = \"${COCKROACH_DEV_LICENSE}\";"
 cockroach sql --url $URL_REQUIRE --execute "SET CLUSTER SETTING cluster.organization = \"${COCKROACH_DEV_ORGANIZATION}\";"
 cockroach sql --url $URL_REQUIRE --execute "SET CLUSTER SETTING kv.rangefeed.enabled = true;"

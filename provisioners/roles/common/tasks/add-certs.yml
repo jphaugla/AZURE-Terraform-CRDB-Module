@@ -22,13 +22,13 @@
     dest: /home/adminuser/certs/ca.crt
     mode: '0400'
 
-- name: create client.jhaugland.crt
+- name: create client.db_admin_user.crt
   copy:
     src: "./temp/{{region}}/tls_user_cert"
     dest: "/home/adminuser/certs/client.{{db_admin_user}}.crt"
     mode: '0400'
 
-- name: create client.jhaugland.key
+- name: create client.db_admin_user.key
   copy:
     src: "./temp/{{region}}/tls_user_key"
     dest: "/home/adminuser/certs/client.{{db_admin_user}}.key"

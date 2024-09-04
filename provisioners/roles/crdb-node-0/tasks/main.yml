@@ -9,8 +9,8 @@
     dest: system_locations.sql    
 
 - name: copy create user sql script
-  copy:
-    src: create_user.sql
+  template:
+    src: create_user.j2
     dest: create_user.sql    
 
 #  ignore errors because of retry.  

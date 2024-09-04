@@ -21,6 +21,12 @@
     src: app_external_ip.txt
     flat: yes
 
+- name: save external ip locally without ip in name
+  fetch:
+    dest: "temp/{{ region }}/app_external_ip.txt"
+    src: app_external_ip.txt
+    flat: yes
+
 - name: save internal ip to app node
   copy:
     content: "{{ ip_int_node }}"
@@ -29,5 +35,11 @@
 - name: save internal ip locally
   fetch:
     dest: "temp/{{ region }}/app_internal_ip{{ ip_int_node }}.txt"
+    src: app_internal_ip.txt
+    flat: yes
+
+- name: save internal ip locally without ip in name
+  fetch:
+    dest: "temp/{{ region }}/app_internal_ip.txt"
     src: app_internal_ip.txt
     flat: yes

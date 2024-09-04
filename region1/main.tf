@@ -101,7 +101,7 @@ module "azure" {
 # ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
-   include_kafka           = "no"
+   include_kafka           = "yes"
 #   small size version
    kafka_vm_size            = "Standard_B4ms"
 #   kafka_vm_size             = "Standard_D4s_v5"

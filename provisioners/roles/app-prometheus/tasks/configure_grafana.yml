@@ -1,7 +1,7 @@
 - name: change grafana admin password
   become: yes
   shell:
-    cmd: "grafana-cli admin reset-admin-password jasonrocks"
+    cmd: "grafana-cli admin reset-admin-password "{{ db_admin_password }}""
 
 - name: create prometheus datasource
   community.grafana.grafana_datasource:
@@ -11,7 +11,7 @@
     access: proxy
     url: http://localhost:9090
     url_username: admin
-    url_password: jasonrocks
+    url_password: "{{ db_admin_password }}"
     enforce_secure_data: true
 
 - name: Import Grafana dashboards for crdb
@@ -22,7 +22,7 @@
     path: https://github.com/cockroachdb/cockroach/blob/master/monitoring/grafana-dashboards/by-cluster/changefeeds.json
     url: http://localhost:9090
     url_username: admin
-    url_password: jasonrocks
+    url_password: "{{ db_admin_password }}"
 
 - name: Import Grafana replicator dashboard 
   community.grafana.grafana_dashboard:
@@ -32,5 +32,5 @@
     path: https://github.com/cockroachdb/replicator/blob/master/scripts/dashboard/replicator.json
     url: http://localhost:9090
     url_username: admin
-    url_password: jasonrocks
+    url_password: "{{ db_admin_password }}"
 

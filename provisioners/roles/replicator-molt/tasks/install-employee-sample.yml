@@ -5,7 +5,7 @@
     mode: '0755'
 
 - name: copy create if not exist database command for postgres
-  copy:
+  template:
     src: createDB.sql
     dest: /tmp/createDB.sql
     mode: '0755'

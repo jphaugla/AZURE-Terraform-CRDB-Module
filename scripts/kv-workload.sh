@@ -1,4 +1,5 @@
-export CONNECT='postgresql://jhaugland@52.184.153.153:26257?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.jhaugland.crt&sslkey=/home/adminuser/certs/client.jhaugland.key'
+export DBUSER=jhaugland
+export CONNECT='postgresql://${DBUSER}@52.184.153.153:26257?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.${DBUSER}.crt&sslkey=/home/adminuser/certs/client.${DBUSER}.key'
 # cockroach workload init kv --drop --splits 338 ${CONNECT}
 # max-rate max-ops
 # max_rate did not help
