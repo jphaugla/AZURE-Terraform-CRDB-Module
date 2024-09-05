@@ -2,7 +2,18 @@
   include_tasks: save-ips.yml
   when:
     - save_ips|bool
+
 - name: disable firewalld
   include_tasks: firewalld.yml
   when:
     - firewalld|bool
+
+- name: install haproxy
+  include_tasks: install-haproxy.yml
+  when:
+    - install_haproxy|bool
+
+- name: start haproxy
+  include_tasks: start-haproxy.yml
+  when:
+    - start_haproxy|bool

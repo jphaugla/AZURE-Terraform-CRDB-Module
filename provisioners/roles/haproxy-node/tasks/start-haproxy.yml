@@ -1,0 +1,4 @@
+- name: run haproxy
+  shell:
+    cmd: "( nohup haproxy -f haproxy.cfg > haproxy.log 2>&1 & )"
+    chdir: /home/adminuser

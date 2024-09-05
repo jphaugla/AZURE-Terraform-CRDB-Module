@@ -1,2 +1,4 @@
 save_ips: true
 firewalld: true
+install_haproxy: true
+start_haproxy: true
