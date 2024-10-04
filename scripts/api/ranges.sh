@@ -1,0 +1,1 @@
+./wrapper.sh ranges/hot
