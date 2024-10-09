@@ -5,6 +5,7 @@
     state: latest
 
 - name: set up haproxy.cfg file
+  become: yes
   template:
     src: haproxy.j2
-    dest: /home/adminuser/haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg

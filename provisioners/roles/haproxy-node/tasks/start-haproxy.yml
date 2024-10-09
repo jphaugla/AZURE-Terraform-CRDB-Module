@@ -1,6 +1,14 @@
-# will only start haproxy once as it checks for an haproxy log file
-- name: run haproxy
+- name: change selinx setting to allow haproxy to connect to any port
+  become: yes
   shell:
-    cmd: "( nohup haproxy -f haproxy.cfg > haproxy.log 2>&1 & )"
-    chdir: /home/adminuser
-    creates: haproxy.log
+    cmd: "setsebool -P haproxy_connect_any=1"
+
+- name: run haproxy
+  become: yes
+  shell:
+    cmd: systemctl start haproxy
+
+- name: enable haproxy
+  become: yes
+  shell:
+    cmd: systemctl enable haproxy

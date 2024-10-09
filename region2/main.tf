@@ -64,7 +64,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "24.2.0"
+   crdb_version               = "24.2.3"
 
 # ----------------------------------------
 # Cluster Enterprise License Keys
