@@ -1,7 +1,7 @@
 - name: run application
   shell: 
     cmd: "( nohup  ./runApp.sh </dev/null > {{ crdb_file_location }}/logs/bank-app/app.log 2>&1  & )"
-    chdir: /home/adminuser/Digital-Banking-CockroachDB
+    chdir: /opt/Digital-Banking-CockroachDB
 
 - name: pause a few seconds
   pause:
@@ -13,4 +13,4 @@
 - name: run application again
   shell: 
     cmd: "( nohup  ./runApp.sh >  {{ crdb_file_location }}/logs/bank-app/app2.log 2>&1  & )"
-    chdir: /home/adminuser/Digital-Banking-CockroachDB
+    chdir: /opt/Digital-Banking-CockroachDB

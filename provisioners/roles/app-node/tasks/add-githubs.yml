@@ -3,4 +3,4 @@
   ignore_errors: yes
   git:
     repo: 'https://github.com/jphaugla/Digital-Banking-CockroachDB'
-    dest: /home/adminuser/Digital-Banking-CockroachDB
+    dest: /opt/Digital-Banking-CockroachDB

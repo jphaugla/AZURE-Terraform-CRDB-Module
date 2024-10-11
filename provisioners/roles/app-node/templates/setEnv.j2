@@ -1,7 +1,7 @@
 export COCKROACH_HOST={{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}}
 export COCKROACH_PORT=26257
 # export COCKROACH_URL="jdbc:postgresql://${COCKROACH_HOST}:${COCKROACH_PORT}/defaultdb?sslmode=verify-full&sslrootcert=../certs/ca.crt"
-export COCKROACH_URL="jdbc:postgresql://${COCKROACH_HOST}:${COCKROACH_PORT}/defaultdb?sslmode=verify-full&sslcert=../certs/client.{{ db_admin_user }}.crt.der&sslkey=../certs/client.{{ db_admin_user }}.key.der&sslrootcert=../certs/ca.crt.der"
+export COCKROACH_URL="jdbc:postgresql://${COCKROACH_HOST}:${COCKROACH_PORT}/defaultdb?sslmode=verify-full&sslcert=$HOME/certs/client.{{ db_admin_user }}.crt.der&sslkey=$HOME/certs/client.{{ db_admin_user }}.key.der&sslrootcert=$HOME/certs/ca.crt.der"
 export COCKROACH_DB_USER={{ db_admin_user }}
 export COCKROACH_DB_PASS={{ db_admin_password }}
 # substitute in actual KAFKA_HOST internal IP

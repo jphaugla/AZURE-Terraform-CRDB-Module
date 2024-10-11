@@ -19,6 +19,11 @@
   when:
     - install_molt_replicator|bool
 
+- name: install dbworkload
+  include_tasks: install-dbworkload.yml
+  when:
+    - install_dbworkload|bool
+
 - name: install git
   include_tasks: install-git.yml
   when:

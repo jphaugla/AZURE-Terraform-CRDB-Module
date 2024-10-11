@@ -4,12 +4,13 @@ maven_version: '3.9.6'
 #  this works fine but the maven version keeps changing so setting to true
 install_java_maven_go: true
 install_molt_replicator: true
+install_dbworkload: true
 add_githubs: true
 # this isn't working
 install_sysbench: false
 package_java_app: true
 install_nodejs_typescript: true
-nvm_version: "0.39.1"
-node_version: "19.7.0"
+nvm_version: "0.40.1"
+node_version: "20.18.0"
 create_der_certs: true
 start_java_app: true

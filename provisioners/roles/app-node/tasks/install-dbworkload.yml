@@ -1,0 +1,41 @@
+- name: Install python3 pip
+  become: yes
+  yum:
+    name: python3-pip
+    state: latest
+
+- name: install dbworkload for postgres and cockroachdb
+  shell:
+    cmd: pip3 install dbworkload[postgres]
+
+- name: Create a directory if it does not exist
+  file:
+    path: /opt/dbworkload
+    state: directory
+    mode: '0755'
+
+- name: save sample dbworkload script
+  copy:
+    content: "{{ lookup('template','dbworkload.j2') }}"
+    dest: /opt/dbworkload/dbworkload.sh
+    owner: adminuser
+    group: adminuser
+    mode: '0755'
+
+- name: wget workload class
+  become: yes
+    src: https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.py
+    dest: /opt/dbworkload
+    remote_src: yes
+
+- name: wget workload DDL file
+  become: yes
+    src: https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.sql
+    dest: /opt/dbworkload
+    remote_src: yes
+
+- name: wget workload datageneration file
+  become: yes
+    src: https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.yaml
+    dest: /opt/dbworkload
+    remote_src: yes
