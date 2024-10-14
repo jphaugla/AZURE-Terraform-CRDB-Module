@@ -287,13 +287,12 @@ the other region will have this application nodes public IP address in its webho
 * [active-active Docker deployment](https://github.com/cockroachdb/replicator/tree/master/scripts/active_active)
 * [replicator/replicator grafana dashboards](https://github.com/cockroachdb/replicator/wiki/Monitoring)
 ## dbworkload
-dbworkload is installed as part of the ansible set up.  A script to run is also configured with the correct IP addresses for running dbworkload with a standard banking demo as descripted in this [dbworkload project home](https://pypi.org/project/dbworkload/)
+dbworkload is installed as part of the ansible set up.  A script to run is also configured with the correct IP addresses for running dbworkload with a standard banking demo as described in this [dbworkload project home](https://pypi.org/project/dbworkload/)
 ### using dbworkload
 ```bash
 cd /opt/dbworkload
 ./dbworkload.sh
 ```
-
 
 ## To tear it all down
 NOTE:  on teardown, may see failures on delete of some azure components.  Re-running the destroy command is an option but sometime a force delete is needed on the OS disk drives of some nodes
