@@ -34,14 +34,14 @@
 - name: wget maven
   become: yes
   unarchive:
-    src: https://dlcdn.apache.org/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz
+    src: "https://dlcdn.apache.org/maven/maven-3/{{ maven_version }}/binaries/apache-maven-{{ maven_version }}-bin.tar.gz"
     dest: /opt
     remote_src: yes
 
 - name: create simple maven link
   become: yes
   file:
-   src: /opt/apache-maven-{{ maven_version }}
+   src: "/opt/apache-maven-{{ maven_version }}"
    dest:  /opt/maven
    owner: root
    group: root

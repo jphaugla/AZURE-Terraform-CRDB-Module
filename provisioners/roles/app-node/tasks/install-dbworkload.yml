@@ -23,19 +23,16 @@
     mode: '0755'
 
 - name: wget workload class
-  become: yes
-    src: https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.py
-    dest: /opt/dbworkload
-    remote_src: yes
+  get_url:
+    url: 'https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.py'
+    dest: /opt/dbworkload/bank.py
 
 - name: wget workload DDL file
-  become: yes
-    src: https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.sql
-    dest: /opt/dbworkload
-    remote_src: yes
+  get_url:
+    url: 'https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.sql'
+    dest: /opt/dbworkload/bank.sql
 
 - name: wget workload datageneration file
-  become: yes
-    src: https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.yaml
-    dest: /opt/dbworkload
-    remote_src: yes
+  get_url:
+    url: 'https://raw.githubusercontent.com/fabiog1901/dbworkload/main/workloads/postgres/bank.yaml'
+    dest: /opt/dbworkload/bank.yaml

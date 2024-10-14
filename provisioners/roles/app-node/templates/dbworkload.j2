@@ -1,9 +1,10 @@
 export CONNECT='postgresql://{{ db_admin_user }}@{{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}}:26257/bank?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.{{ db_admin_user }}.crt&sslkey=/home/adminuser/certs/client.{{ db_admin_user }}.key'
+cd /opt/dbworkload
 cockroach sql --url=${CONNECT} --file=bank.sql
-cockroach sql --url=${CONNECT} --execute="dbworkload util csv -i bank.yaml -x 1"
-cd workloads/bank
-nohup python3 -m http.server 3000 >http_server.out 2>& &
+dbworkload util csv -i bank.yaml -x 1
+cd bank
+nohup python3 -m http.server 3000 >http_server.out 2>&1 &
 wait 5
-cockroach sql --url=${CONNECT} --execute="IMPORT INTO ref_data CSV DATA ('http://localhost:3000/ref_data.0_0_0.csv') WITH delimiter = e'\t';"
+cockroach sql --url=${CONNECT} --execute="IMPORT INTO ref_data CSV DATA ('http://{{lookup('file', './temp/{{region}}/app_internal_ip.txt')}}:3000/ref_data.0_0_0.tsv') WITH delimiter = e'\t';"
 cd ..
-dbworkload run -w postgres/bank.py --uri ${CONNECT} -l debug --args '{"read_pct":50}' -i 1 -c 1
+dbworkload run -w bank.py --uri ${CONNECT} -l debug --args '{"read_pct":50}' -i 100000 -d 120
