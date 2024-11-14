@@ -1,0 +1,17 @@
+- name: add cluster org script
+  ansible.builtin.template:
+    src: cluster_organization.j2
+    dest: cluster_organization.sql
+
+- name: add enterprise license script
+  ansible.builtin.template:
+    src: enterprise_license.j2
+    dest: enterprise_license.sql
+
+- name: add organization
+  shell:
+    cmd: "cockroach sql --certs-dir=certs --file=cluster_organization.sql"
+
+- name: add enterprise license
+  shell:
+    cmd: "cockroach sql --certs-dir=certs --file=enterprise_license.sql"

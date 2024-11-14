@@ -23,23 +23,10 @@
   shell:
     cmd: "cockroach sql --certs-dir=certs --file=create_user.sql"
 
-- name: add cluster org script
-  ansible.builtin.template:
-    src: cluster_organization.j2
-    dest: cluster_organization.sql
-
-- name: add enterprise license script
-  ansible.builtin.template:
-    src: enterprise_license.j2
-    dest: enterprise_license.sql
-
-- name: add organization
-  shell:
-    cmd: "cockroach sql --certs-dir=certs --file=cluster_organization.sql"
-
-- name: add enterprise license
-  shell:
-    cmd: "cockroach sql --certs-dir=certs --file=enterprise_license.sql"
+- name: add enterprise license 
+  include_tasks: install_enterprise_keys.yml
+  when:
+    - install_enterprise_keys|bool
 
 - name: enable rangefeed
   command: "{{ lookup('template','enable-rangefeed.j2') }}"
