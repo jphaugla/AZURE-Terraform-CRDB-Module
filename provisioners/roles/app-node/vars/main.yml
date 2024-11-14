@@ -4,7 +4,7 @@ maven_version: '3.9.6'
 #  this works fine but the maven version keeps changing so setting to true
 install_java_maven_go: true
 install_molt_replicator: true
-install_dbworkload: true
+install_dbworkload: false
 add_githubs: true
 # this isn't working
 install_sysbench: false
