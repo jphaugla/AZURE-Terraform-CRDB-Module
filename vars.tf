@@ -263,6 +263,18 @@
     }
 
 # ----------------------------------------
+# Network Load Balancer
+# ----------------------------------------
+    variable "include_load_balancer" {
+      description = "'yes' or 'no' to include a load balancer"
+      type        = string
+      default     = "yes"
+      validation {
+        condition = contains(["yes", "no"], var.include_load_balancer)
+        error_message = "Valid value for variable 'include_kafka' is : 'yes' or 'no'"        
+      }
+    }
+# ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
     variable "include_kafka" {

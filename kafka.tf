@@ -53,19 +53,4 @@ resource "azurerm_linux_virtual_machine" "kafka" {
     caching   = "ReadWrite" # possible values: None, ReadOnly and ReadWrite
     storage_account_type = "Standard_LRS" # possible values: Standard_LRS, StandardSSD_LRS, Premium_LRS, Premium_SSD, StandardSSD_ZRS and Premium_ZRS
   }
- user_data = base64encode(<<EOF
-#!/bin/bash -xe
-su ${local.admin_username} -c 'mkdir /home/${local.admin_username}/certs'
-echo '${local.tls_cert}' >> /home/${local.admin_username}/certs/ca.crt
-chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/ca.crt
-chmod 600 /home/${local.admin_username}/certs/ca.crt
-echo '${local.tls_user_cert}' >> /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
-chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
-chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.crt
-echo '${local.tls_user_key}' >> /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
-chown ${local.admin_username}:${local.admin_username} /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
-chmod 600 /home/${local.admin_username}/certs/client.${var.admin_user_name}.key
-
-    EOF
-    )
 }

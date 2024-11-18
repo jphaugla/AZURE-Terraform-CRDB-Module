@@ -74,17 +74,6 @@ echo "Shutting down and disabling firewalld -- SECURITY RISK!!"
 systemctl stop firewalld
 systemctl disable firewalld
 
-if [ "${var.app_resize_homelv}" = "yes" ] 
-then 
-  echo "Attempting to resize /dev/mapper/rootvg-homelv with any space available on the physical volume"
-  echo "Resize the Linux LVM"
-  growpart /dev/sda 2
-  echo "Capture the free space on the device in GB.  The awk command is capturing only the integer portion of the output"
-  ds=`pvs -o name,free --units g --noheadings | awk '{printf "%dG\n", \$2}'`
-  echo "Resizing the logical volume by $ds"
-  lvresize -r -L +$ds /dev/mapper/rootvg-homelv
-fi
-
 echo "CRDB() {" >> /home/${local.admin_username}/.bashrc
 echo 'cockroach sql --url "postgresql://${var.admin_user_name}@'"${azurerm_network_interface.haproxy[0].private_ip_address}:26257/defaultdb?sslmode=verify-full&sslrootcert="'$HOME/certs/ca.crt&sslcert=$HOME/certs/client.'"${var.admin_user_name}.crt&sslkey="'$HOME/certs/client.'"${var.admin_user_name}.key"'"' >> /home/${local.admin_username}/.bashrc
 echo "}" >> /home/${local.admin_username}/.bashrc   

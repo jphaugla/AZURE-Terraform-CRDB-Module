@@ -64,7 +64,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "24.2.3"
+   crdb_version               = "24.3.0-beta.3"
 
 # ----------------------------------------
 # Cluster Enterprise License Keys
@@ -73,7 +73,7 @@ module "azure" {
 # must add the enterprise licence and the cluster organization to specified subdirectory
 #  ${full_path_license_directory}/enterprise_licence
 #  ${full_path_license_directory}/cluster_organization
-   install_enterprise_keys   = "yes"
+   install_enterprise_keys   = "false"
    full_path_license_directory = "/Users/jasonhaugland/.crdb/"
 
 # ----------------------------------------
@@ -102,6 +102,11 @@ module "azure" {
 #   small size version
 #   kafka_vm_size            = "Standard_B4ms"
    kafka_vm_size             = "Standard_D4s_v5"
+
+# ----------------------------------------
+# Create Network load balancer
+# ----------------------------------------
+   include_load_balancer           = "yes"
 
 # ----------------------------------------
 # Cluster Location Data - For console map

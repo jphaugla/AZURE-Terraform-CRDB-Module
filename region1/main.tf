@@ -85,6 +85,10 @@ module "azure" {
 #  very small size just to verify functionality
    haproxy_vm_size            = "Standard_B4ms"
 #   haproxy_vm_size            = "Standard_D4s_v5"
+# ----------------------------------------
+# Create Network load balancer
+# ----------------------------------------
+   include_load_balancer           = "yes"
    
 # ----------------------------------------
 # APP Instance Specifications
