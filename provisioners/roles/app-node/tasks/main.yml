@@ -66,3 +66,11 @@
     owner: adminuser
     group: adminuser
     mode: '0755'
+
+- name: copy sql script
+  ansible.builtin.template:
+    src: sql.j2
+    dest: sql.sh
+    owner: adminuser
+    group: adminuser
+    mode: '0755'

@@ -16,14 +16,14 @@
 
 - name: start crdb allowing non-tls
   shell:
-    cmd: "cockroach start --locality=region={{ region }} --certs-dir=certs --advertise-addr={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} --join={{ join_string }} --max-offset=250ms --store={{ crdb_file_location }}/cockroach-data  --accept-sql-without-tls --background"
+    cmd: "cockroach start --locality=region={{ region }} --certs-dir=certs --advertise-addr={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} --join={{ join_string }} --max-offset=250ms --store={{ crdb_file_location }}/{{ admin_username }}/cockroach-data  --accept-sql-without-tls --background"
   when: 
     - crdb_health_result.status < 0
     - allow_non_tls|bool
 
 - name: start crdb not allowing tls
   shell:
-    cmd: "cockroach start --locality=region={{ region }} --certs-dir=certs --advertise-addr={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} --join={{ join_string }} --max-offset=250ms --store={{ crdb_file_location }}/cockroach-data --background"
+    cmd: "cockroach start --locality=region={{ region }} --certs-dir=certs --advertise-addr={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }} --join={{ join_string }} --max-offset=250ms --store={{ crdb_file_location }}/{{ admin_username }}/cockroach-data --background"
   when: 
     - crdb_health_result.status < 0
     - not allow_non_tls|bool

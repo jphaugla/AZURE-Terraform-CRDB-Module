@@ -1,4 +1,4 @@
-export CONNECT='postgresql://{{ db_admin_user }}@{{lookup('file', './temp/{{region}}/haproxy_internal_ip.txt')}}:26257/bank?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.{{ db_admin_user }}.crt&sslkey=/home/adminuser/certs/client.{{ db_admin_user }}.key'
+export CONNECT='postgresql://{{ db_admin_user }}@{{load_balancer_private_ip}}:26257/bank?sslmode=verify-full&sslrootcert=/home/adminuser/certs/ca.crt&sslcert=/home/adminuser/certs/client.{{ db_admin_user }}.crt&sslkey=/home/adminuser/certs/client.{{ db_admin_user }}.key'
 cd /opt/dbworkload
 cockroach sql --url=${CONNECT} --file=bank.sql
 dbworkload util csv -i bank.yaml -x 1

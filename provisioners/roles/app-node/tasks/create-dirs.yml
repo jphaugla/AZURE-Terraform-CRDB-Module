@@ -1,7 +1,7 @@
 - name: make log replicator directory
   become: yes
   file: 
-    path: "{{ crdb_file_location }}/logs/replicator"
+    path: "{{ crdb_file_location }}/{{ admin_username }}/logs/replicator"
     state: directory
     mode: '0777'
     owner: adminuser
@@ -10,7 +10,7 @@
 - name: make app log directory
   become: yes
   file: 
-    path: "{{ crdb_file_location }}/logs/bank-app"
+    path: "{{ crdb_file_location }}/{{ admin_username }}/logs/bank-app"
     state: directory
     mode: '0777'
     owner: adminuser

@@ -7,7 +7,7 @@
 
 - name: start replicator
   shell: 
-    cmd: "( nohup ./start.sh > {{ crdb_file_location }}/logs/replicator/replicator.log 2>&1 & )"
+    cmd: "( nohup ./start.sh > {{ crdb_file_location }}/{{ admin_username }}/logs/replicator/replicator.log 2>&1 & )"
     chdir: /opt
 
 - name: pause a few seconds
@@ -16,6 +16,6 @@
 
 - name: start replicator retry
   shell: 
-    cmd: "( nohup ./start.sh > {{ crdb_file_location }}/logs/replicator/replicator2.log 2>&1 & )"
+    cmd: "( nohup ./start.sh > {{ crdb_file_location }}/{{ admin_username }}/logs/replicator/replicator2.log 2>&1 & )"
     chdir: /opt
 

@@ -23,8 +23,8 @@ module "azure" {
 #  file location for larger files not to be placed in the user home directory
 #  will be created as root but owned by the adminuser on app-node and crdb-nodes
 #  will hold application log files, cockraoch_data, and other large files.  Subdirectories
-#  will be used from this location
-   crdb_file_location         = "/mnt/adminuser"
+#  will be used from this location.  this crdb_file_location will be the mount point.  the first subdirectory will be the adminuser 
+   crdb_file_location         = "/mnt/data"
 # Azure Locations: "australiacentral,australiacentral2,australiaeast,australiasoutheast,brazilsouth,brazilsoutheast,brazilus,canadacentral,canadaeast,centralindia,centralus,centraluseuap,eastasia,eastus,eastus2,eastus2euap,francecentral,francesouth,germanynorth,germanywestcentral,israelcentral,italynorth,japaneast,japanwest,jioindiacentral,jioindiawest,koreacentral,koreasouth,malaysiasouth,northcentralus,northeurope,norwayeast,norwaywest,polandcentral,qatarcentral,southafricanorth,southafricawest,southcentralus,southeastasia,southindia,swedencentral,swedensouth,switzerlandnorth,switzerlandwest,uaecentral,uaenorth,uksouth,ukwest,westcentralus,westeurope,westindia,westus,westus2,westus3,austriaeast,chilecentral,eastusslv,israelnorthwest,malaysiawest,mexicocentral,newzealandnorth,southeastasiafoundational,spaincentral,taiwannorth,taiwannorthwest"
 # ----------------------------------------
 # Resource Group
@@ -48,10 +48,12 @@ module "azure" {
 # CRDB Instance Specifications
 # ----------------------------------------
 #   this is very small node just for testing deployment
-   crdb_vm_size               = "Standard_B4ms"
+#   crdb_vm_size               = "Standard_B4ms"
 #   this is a medium size  production node
-#   crdb_vm_size               = "Standard_D8s_v5"
-   crdb_disk_size             = 128
+   crdb_vm_size               = "Standard_D8s_v5"
+#   crdb_vm_size               = "Standard_D32s_v5"
+   crdb_disk_size             = 1024
+   crdb_store_disk_size             = 1024
    crdb_nodes                 = 3
 
 # ----------------------------------------
@@ -64,7 +66,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "24.3.0-beta.3"
+   crdb_version               = "24.3.0-rc.1"
 
 # ----------------------------------------
 # Cluster Enterprise License Keys
@@ -79,10 +81,20 @@ module "azure" {
 # ----------------------------------------
 # HA Proxy Instance Specifications
 # ----------------------------------------
-   include_ha_proxy           = "yes"
+#   ha_proxy node will be created regardless of this flag
+#       because the ha_proxy node also gets prometheus installed
 #  very small size just to verify functionality
    haproxy_vm_size            = "Standard_B4ms"
-#    haproxy_vm_size            = "Standard_D4s_v5"
+#   haproxy_vm_size            = "Standard_D4s_v5"
+
+# ----------------------------------------
+# Create Network load balancer
+# ----------------------------------------
+#  if this is set to yes the load balancer will be used instead of haproxy
+#     for the connections to the database.  However, haproxy will still be setup
+#     unless the include_ha_proxy flag is set to no
+   include_load_balancer           = "yes"
+
 
 # ----------------------------------------
 # APP Instance Specifications
@@ -92,7 +104,7 @@ module "azure" {
    app_nodes                  = 1
 #   this is bare minimum for functionalizy
    app_vm_size                = "Standard_B4ms"
-#    app_vm_size                = "Standard_D8s_v5"
+#   app_vm_size                = "Standard_D8s_v5"
    app_disk_size              = 64
 
 # ----------------------------------------
@@ -100,13 +112,8 @@ module "azure" {
 # ----------------------------------------
    include_kafka           = "no"
 #   small size version
-#   kafka_vm_size            = "Standard_B4ms"
-   kafka_vm_size             = "Standard_D4s_v5"
-
-# ----------------------------------------
-# Create Network load balancer
-# ----------------------------------------
-   include_load_balancer           = "yes"
+   kafka_vm_size            = "Standard_B4ms"
+#    kafka_vm_size             = "Standard_D4s_v5"
 
 # ----------------------------------------
 # Cluster Location Data - For console map

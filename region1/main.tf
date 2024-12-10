@@ -43,8 +43,8 @@ module "azure" {
 #  file location for larger files not to be placed in the user home directory
 #  will be created as root but owned by the adminuser on app-node and crdb-nodes 
 #  will hold application log files, cockraoch_data, and other large files.  Subdirectories
-#  will be used from this location
-   crdb_file_location         = "/mnt/adminuser"
+#  will be used from this location.  this crdb_file_location will be the mount point.  the first subdirectory will be the adminuser
+   crdb_file_location         = "/mnt/data"
    
 # ----------------------------------------
 # CRDB Instance Specifications
@@ -66,7 +66,7 @@ module "azure" {
 # ----------------------------------------
 # CRDB Specifications
 # ----------------------------------------
-   crdb_version               = "24.2.3"
+   crdb_version               = "24.3.0"
    
 # ----------------------------------------
 # Cluster Enterprise License Keys
@@ -75,13 +75,12 @@ module "azure" {
 # must add the enterprise licence and the cluster organization to specified subdirectory 
 #  ${full_path_license_directory}/enterprise_licence
 #  ${full_path_license_directory}/cluster_organization
-   install_enterprise_keys   = "yes"
+   install_enterprise_keys   = "false"
    full_path_license_directory = "/Users/jasonhaugland/.crdb/"
    
 # ----------------------------------------
 # HA Proxy Instance Specifications
 # ----------------------------------------
-   include_ha_proxy           = "yes"
 #  very small size just to verify functionality
    haproxy_vm_size            = "Standard_B4ms"
 #   haproxy_vm_size            = "Standard_D4s_v5"

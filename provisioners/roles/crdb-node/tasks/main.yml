@@ -3,6 +3,11 @@
   when:
     - save_ips|bool
 
+- name: format the disks
+  include_tasks: format-disks.yml
+  when:
+    - format_disks|bool
+
 - name: generate certificates needed for crdb
   include_tasks: gen-certs.yml
   when:

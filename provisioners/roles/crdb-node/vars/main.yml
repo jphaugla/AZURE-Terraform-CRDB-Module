@@ -1,5 +1,7 @@
 save_ips: true
 gen_certs: true
+format_disks: true
 start_crdb: true
 changefeed: true
 firewalld: true
+disk_device: "/dev/sdb"

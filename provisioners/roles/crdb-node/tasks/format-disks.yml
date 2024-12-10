@@ -1,0 +1,68 @@
+- name: Ensure disk is present
+  become: yes
+  wait_for:
+    path: "{{ disk_device }}"
+    state: present
+    timeout: 60
+
+- name: Partition the disk
+  become: yes
+  community.general.parted:
+    device: "{{ disk_device }}"
+    label: gpt
+    number: 1
+    state: present
+    part_start: 0%
+    part_end: 100%
+
+- name: Format the disk
+  become: yes
+  filesystem:
+    fstype: xfs
+    dev: "{{ disk_device }}1"
+
+- name: Create mount point
+  become: yes
+  file:
+    path: "{{ crdb_file_location }}"
+    state: directory
+
+- name: Mount the disk
+  become: yes
+  mount:
+    path: "{{ crdb_file_location }}"
+    src: "{{ disk_device }}1"
+    fstype: xfs
+    opts: defaults
+    state: mounted
+
+- name: Fetch partition UUID
+  become: yes
+  command: blkid -s UUID -o value {{ disk_device }}1
+  register: blkid_output
+
+- name: Add entry to fstab
+  become: yes
+  lineinfile:
+    dest: /etc/fstab
+    line: "UUID={{ blkid_output.stdout }} {{ crdb_file_location }} xfs defaults 0 2"
+
+- name: Set ownership and permissions for admin user directory
+  become: yes
+  file:
+    path: "{{ crdb_file_location }}/{{ admin_username }}"
+    state: directory
+    owner: "{{ admin_username }}"
+    group: "{{ admin_username }}"
+    mode: '0755'
+
+- name: Validate mount
+  become: yes
+  shell: "df -h | grep {{ crdb_file_location }}"
+  register: mount_status
+  failed_when: mount_status.rc != 0
+
+- name: Print validation result
+  debug:
+    msg: "Mount status: {{ mount_status.stdout }}"
+

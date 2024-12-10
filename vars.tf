@@ -123,9 +123,9 @@
       default     = "m6i.large"
     }
     variable "crdb_file_location" {
-      description = "The directory to use for cockroach_data directory"
+      description = "The mount point for large files.  Subdirectory of adminuser will be added as well"
       type        = string
-      default     = "/home/adminuser"
+      default     = "/mnt/data"
     }
     variable "crdb_nodes" {
       description = "Number of crdb nodes.  This should be a multiple of 3.  Each node is an Azure Instance"
@@ -141,8 +141,17 @@
       type        = number
       default     = 64
       validation {
-        condition = contains([64, 128, 256, 512], var.crdb_disk_size)
-        error_message = "CRDB Node disk size (in GB) must be 64, 128, 256 or 512"
+        condition = contains([64, 128, 256, 512, 1024, 2048, 3072, 4096], var.crdb_disk_size)
+        error_message = "CRDB Node disk size (in GB) must be 64, 128, 256, 512, 1024, 2048, 3072 or 4096"
+      }
+    }
+    variable "crdb_store_disk_size" {
+      description = "Size of the data disk attached to the vm"
+      type        = number
+      default     = 64
+      validation {
+        condition = contains([64, 128, 256, 512, 1024, 2048, 3072, 4096], var.crdb_store_disk_size)
+        error_message = "CRDB Node disk size (in GB) must be 64, 128, 256, 512, 1024, 2048, 3072 or 4096"
       }
     }
 # ----------------------------------------
@@ -274,6 +283,8 @@
         error_message = "Valid value for variable 'include_kafka' is : 'yes' or 'no'"        
       }
     }
+
+
 # ----------------------------------------
 # Kafka Instance Specifications
 # ----------------------------------------
